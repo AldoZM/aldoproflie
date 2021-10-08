@@ -7,7 +7,11 @@
 body{
   background-color: #1c449b;
 }
-
+@media screen and (max-width: 600px) {
+  body {
+    background-color: lightblue;
+  }
+}
 canvas {
   position: fixed;
   top: 0;
@@ -38,37 +42,27 @@ main {
   grid-template-columns: repeat(12, 1fr);
 }
 
-#linux{
-  padding: 3%;
-}#git{
-  padding: 3%;
-}#node{
-  padding: 3%;
-}#docker{
-  padding: 3%;
-}#post{
-  padding: 3%;
-}#react{
-  padding: 3%;
-}#JS{
-  padding: 3%;
-}#python{
-  padding: 3%;
-}#C{
-  padding: 3%;
+@media screen and (max-width: 600px) {
+  main {
+    grid-template-columns: repeat(1, 1fr);
+    padding: 0px 0px;
+
+  }
 }
 
+#linux,#git,#node,#docker,#post,#react,#JS,#python,#C {
+  padding: 3%;
+}
 h1, h2, h3, blockquote {
   font-family: elevon, sans-serif;
   font-weight: 800;
   font-style: normal;
 }
 
+img{
+  max-width: 100%;
+}
 #picture{
-  position: absolute;
-  width:350px; height:350px;
-  top: 150px;
-  left: 720px;
 
 }
 /*button */
@@ -120,14 +114,20 @@ canvas {
   }
 
   section {
-    grid-column: 2 / 8;
+    grid-column: 2 / span 5;
     padding: 1rem;
     background: var(--dark-bg);
     font-size: 1.25rem;
     line-height: 1.5;
     margin-bottom: var(--spacing);
   }
-
+  @media screen and (max-width: 600px) {
+    img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
   blockquote {
     margin: 0;
     padding: 0;
@@ -148,6 +148,13 @@ canvas {
     grid-column: 6 / 12;
   }
 
+  @media screen and (max-width:600px){
+    .left {
+      grid-column: 3/6;
+    }
+
+  }
+
 
     </style>
     <meta charset="UTF-8" />
@@ -165,12 +172,10 @@ canvas {
       <header>
         <h1>Aldo Zetina</h1>
         <p>🚀 Welcome to my profile!!</p>
+        <img id = 'picture' src="https://scontent.fcvj1-1.fna.fbcdn.net/v/t39.30808-6/242055384_871711683772918_4248729184072100430_n.jpg?_nc_cat=109&ccb=1-5&_nc_sid=09cbfe&_nc_eui2=AeHEFPCa2BytWDmlW3AOPIrbGHh0u67m4aUYeHS7rubhpYNIsWwUdNvWAq0_WgmgWPNjOjD5nporMuirbbYxrRSI&_nc_ohc=tf0cRxamBxkAX8DnVnn&_nc_ht=scontent.fcvj1-1.fna&oh=a2206bd9acd6b7902827ed4d6efb1258&oe=6164AF36" alt="Profile_picture" > 
         
 
       </header>
-      <section id = 'picture'>
-        <img src="https://scontent.fcvj1-1.fna.fbcdn.net/v/t39.30808-6/242055384_871711683772918_4248729184072100430_n.jpg?_nc_cat=109&ccb=1-5&_nc_sid=09cbfe&_nc_eui2=AeHEFPCa2BytWDmlW3AOPIrbGHh0u67m4aUYeHS7rubhpYNIsWwUdNvWAq0_WgmgWPNjOjD5nporMuirbbYxrRSI&_nc_ohc=tf0cRxamBxkAX8DnVnn&_nc_ht=scontent.fcvj1-1.fna&oh=a2206bd9acd6b7902827ed4d6efb1258&oe=6164AF36" alt="Profile_picture" width="350" height="350"> 
-      </section>
 
       <blockquote>
         <p>I like create stuff and putting it on the internet</p>
@@ -222,22 +227,22 @@ canvas {
         <h2>🐱‍👓 Skill</h2>
         <h3>TECH STACK</h3>
         <a href="https://es.wikipedia.org/wiki/GNU/Linux">
-        <img src="http://assets.stickpng.com/thumbs/58480e82cef1014c0b5e4927.png" alt="linuxLogo" width="80" height="95" id="linux"> 
+        <img src="./img/linux.png" alt="linuxLogo" width="80" height="95" id="linux"> 
         </a>
         <a href="https://git-scm.com/">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Git-logo.svg/1280px-Git-logo.svg.png" alt="gitLogo" width="200" height="85" id = "git"> 
+        <img src="./img/git.png" alt="gitLogo" width="200" height="85" id = "git"> 
         </a>
         <a href="https://nodejs.org/es/">
-        <img src="https://cdn.pixabay.com/photo/2015/04/23/17/41/node-js-736399_960_720.png" alt="node-jsLogo" width="180" height="95" id = "node"> 
+        <img src="./img/node-js.png" alt="node-jsLogo" width="180" height="95" id = "node"> 
         </a>
         <a href="https://www.docker.com/">
-        <img src="https://www.docker.com/sites/default/files/d8/2019-07/horizontal-logo-monochromatic-white.png" alt="dockerLogo" width="280" height="95" id = "docker"> 
+        <img src="./img/docker.png" alt="dockerLogo" width="280" height="95" id = "docker"> 
         </a>
         <a href="https://www.postgresql.org/">
-        <img src="http://assets.stickpng.com/images/584815fdcef1014c0b5e497a.png" alt="postgresqlLogo" width="95" height="95" id = 'post'> 
+        <img src="./img/postgresql.png" alt="postgresqlLogo" width="95" height="95" id = 'post'> 
         </a>
         <a href="https://es.reactjs.org/">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/React.svg/1200px-React.svg.png" alt="reactLogo" width="95" height="95" id = 'react'> 
+        <img src="./img/react.png" alt="reactLogo" width="95" height="95" id = 'react'> 
         </a>
         <h3>PROGRAMMING LANGUAGES</h3>
         <a href="https://developer.mozilla.org/es/docs/Web/JavaScript">
