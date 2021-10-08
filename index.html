@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style>
+
+@import url("https://use.typekit.net/jmk3xov.css");
+body{
+  background-color: #1c449b;
+}
+
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+
+:root {
+  --dark-bg: rgba(15, 15, 15, 0.95);
+  --spacing: 350px;
+
+  font-family: brandon-grotesque, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+main {
+  width: 100vw;
+  color: white;
+  z-index: 99;
+  position: absolute;
+  width: 100%;
+  margin: 0px auto;
+  padding: 120px 0px;
+  
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+}
+
+#linux{
+  padding: 3%;
+}#git{
+  padding: 3%;
+}#node{
+  padding: 3%;
+}#docker{
+  padding: 3%;
+}#post{
+  padding: 3%;
+}#react{
+  padding: 3%;
+}#JS{
+  padding: 3%;
+}#python{
+  padding: 3%;
+}#C{
+  padding: 3%;
+}
+
+h1, h2, h3, blockquote {
+  font-family: elevon, sans-serif;
+  font-weight: 800;
+  font-style: normal;
+}
+
+#picture{
+  position: absolute;
+  width:350px; height:350px;
+  top: 150px;
+  left: 720px;
+
+}
+/*button */
+a {
+  text-decoration: none;
+}
+
+.-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 516px;
+  height: 56px;
+  text-align: center;
+  border-radius: 12px;
+}
+
+.-btn:hover {
+  opacity: .8;
+}
+
+.-bg {
+  background: #1c449b;
+}
+
+.-txt {
+  color: #fff;
+}
+
+.-xs {
+  font-size: 12px;
+}
+/*button */
+
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+
+
+  header {
+    background: var(--dark-bg);
+    grid-column: 2 / span 5;
+    font-size: 2.5rem;
+    padding: 2rem;
+    margin-bottom: var(--spacing);
+  }
+
+  section {
+    grid-column: 2 / 8;
+    padding: 1rem;
+    background: var(--dark-bg);
+    font-size: 1.25rem;
+    line-height: 1.5;
+    margin-bottom: var(--spacing);
+  }
+
+  blockquote {
+    margin: 0;
+    padding: 0;
+    grid-column: 2 / span 9;
+    margin-bottom: var(--spacing);
+  }
+
+  blockquote p {
+    color: black;
+    background-color: white;
+    font-size: 4rem;
+    display: inline;
+    line-height: 1;
+  }
+
+
+  .left {
+    grid-column: 6 / 12;
+  }
+
+
+    </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="Gato2.ico" />
+    <link rel ="style" href="./style.css"/>
+    <title>Aldo Profile</title>
+  </head>
+  <body>
+
+    <canvas id="bg"></canvas>   
+
+    <main>
+
+      <header>
+        <h1>Aldo Zetina</h1>
+        <p>🚀 Welcome to my profile!!</p>
+        
+
+      </header>
+      <section id = 'picture'>
+        <img src="Aldo.jpg" alt="Profile_picture" width="350" height="350"> 
+      </section>
+
+      <blockquote>
+        <p>I like create stuff and putting it on the internet</p>
+      </blockquote>
+
+      <section>
+        <h2>📚 Education 📖</h2>
+        <h1>
+          BACHELOR COMPUTER ENGINEER 💻
+        </h1>
+
+        <a href="https://www.unam.mx/acerca-de-la-unam" class="-btn -bg -txt">
+          UNIVERSIDAD NACIONA AUTÓNOMA DE MÉXICO</a>
+        <p>
+          GPA: 81/100
+        </p>
+        <h1>
+          LEARN JAPANESE 🎌
+        </h1>
+
+        <a href="https://enallt.unam.mx/" class="-btn -bg -txt">
+          ENALLT </a>
+
+          <p>
+            GPA: 80/100
+          </p>
+
+      </section>
+
+      <section class="light">
+        <h2>🐱‍💻 Projects</h2>
+        <h1>Tetris 🕹️</h1>
+        <p>
+          A reacresion of the old game, I was made this game for the class ‘’Data Structure & Algorithms l’’ in this game I use arrays to creates this game in python3 with pygame
+        </p>
+        <a href="https://github.com/AldoZM/Space_Invader_Two_Player_Full" class="-btn -bg -txt">
+          Game Repository 🕹️</a>
+        <h1>Space Invader 2 players 👾</h1>
+        <p>
+          I create this game with pygame but I implement thread to create this game for the players you can manipulate one ship and is independent one from the other ship
+        </p>
+        <a href="https://github.com/AldoZM/Space_Invader_Two_Player_Full" class="-btn -bg -txt">
+          Game Repository 👾</a>
+        <h1>Online Shop 🛒</h1>
+        <p>
+          Development a WEB page of items sale, in that project was used postgresql and React to make it easy and funcional
+        </p>
+
+        <h2>🐱‍👓 Skill</h2>
+        <h3>TECH STACK</h3>
+        <a href="https://es.wikipedia.org/wiki/GNU/Linux">
+        <img src="linux.png" alt="linuxLogo" width="80" height="95" id="linux"> 
+        </a>
+        <a href="https://git-scm.com/">
+        <img src="git.png" alt="gitLogo" width="200" height="85" id = "git"> 
+        </a>
+        <a href="https://nodejs.org/es/">
+        <img src="node-js.png" alt="node-jsLogo" width="180" height="95" id = "node"> 
+        </a>
+        <a href="https://www.docker.com/">
+        <img src="docker.png" alt="dockerLogo" width="280" height="95" id = "docker"> 
+        </a>
+        <a href="https://www.postgresql.org/">
+        <img src="postgresql.png" alt="postgresqlLogo" width="95" height="95" id = 'post'> 
+        </a>
+        <a href="https://es.reactjs.org/">
+        <img src="react.png" alt="reactLogo" width="95" height="95" id = 'react'> 
+        </a>
+        <h3>PROGRAMMING LANGUAGES</h3>
+        <a href="https://developer.mozilla.org/es/docs/Web/JavaScript">
+        <img src = "https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Unofficial_JavaScript_logo_2.svg/800px-Unofficial_JavaScript_logo_2.svg.png" width="95" height="95" id="JS"/>
+        </a>
+        <a href="https://www.python.org/community/logos/">
+        <img src = "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1200px-Python-logo-notext.svg.png" width="95" height="95" id="python"/>
+        </a>
+        <a href="https://es.wikipedia.org/wiki/C%2B%2B"> 
+        <img src = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/ISO_C%2B%2B_Logo.svg/1822px-ISO_C%2B%2B_Logo.svg.png" width="95" height="95" id="C"/>
+        </a>
+        <p>
+
+        </p>
+
+      </section>
+
+      <section class="left">
+        <h1>🌍 Language</h1>
+
+        <h2>Spanish (Mother Language)  🇲🇽 </h2>
+
+        <h2>English (Fluent) 🇬🇧</h2>
+        
+        <h2>Japanese (In learning)  🇯🇵</h2>
+        
+      </section>
+
+      <blockquote>
+        <p>Thanks you for read my CV! 😄</p>
+      </blockquote>
+
+
+    </main>
+    
+    <!-- <script type="module" src="/main.js"></script> -->
+
+  </body>
+</html>
