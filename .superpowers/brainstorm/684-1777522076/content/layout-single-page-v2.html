@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio v2 — Aldo Zetina</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: #010409; font-family: 'Courier New', monospace; color: #e6edf3; }
+
+  /* Browser chrome */
+  .browser-chrome {
+    background: #1c2128; border-bottom: 1px solid #30363d;
+    padding: 8px 16px; display: flex; align-items: center; gap: 12px;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .dots { display: flex; gap: 5px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot.r{background:#f85149} .dot.y{background:#d29922} .dot.g{background:#3fb950}
+  .url-bar { background: #0d1117; border: 1px solid #30363d; border-radius: 6px; padding: 3px 10px; flex:1; max-width:300px; color:#58a6ff; font-size:11px; }
+
+  /* Progress bar */
+  .progress-bar { height: 2px; background: linear-gradient(90deg,#58a6ff,#3fb950); width:0%; position:sticky; top:37px; z-index:99; }
+
+  /* Navbar — 2% bigger */
+  .navbar {
+    position: sticky; top: 39px; z-index: 98;
+    background: rgba(1,4,9,0.97); backdrop-filter: blur(12px);
+    border-bottom: 1px solid #21262d;
+    padding: 18px 72px; /* was 12px 64px — ~2% bigger overall */
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo { color: #58a6ff; font-size: 15px; font-weight: bold; letter-spacing: 2px; }
+  .nav-logo span { color: #3fb950; }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-link { color: #8b949e; font-size: 12px; cursor: pointer; transition: color 0.2s; text-decoration: none; letter-spacing: 1px; }
+  .nav-link:hover { color: #58a6ff; }
+  .nav-link.active { color: #58a6ff; }
+
+  /* Sections */
+  .section { padding: 100px 96px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+  .section-label { font-size: 11px; color: #3fb950; letter-spacing: 3px; margin-bottom: 8px; }
+  .section-title { font-size: 38px; font-weight: bold; margin-bottom: 44px; }
+  .section-title span { color: #58a6ff; }
+
+  /* Typewriter reveal — elements start invisible, typed in on scroll */
+  .type-reveal { opacity: 0; transition: opacity 0.1s; }
+  .type-reveal.typing { opacity: 1; }
+  .typed-text { }
+
+  /* Hero */
+  #home { min-height: calc(100vh - 90px); background: radial-gradient(ellipse at 15% 50%, rgba(88,166,255,0.05) 0%, transparent 55%); }
+  .hero-pre { color: #3fb950; font-size: 13px; margin-bottom: 10px; letter-spacing: 1px; }
+  .hero-name { font-size: clamp(38px,5vw,62px); font-weight:bold; color:#e6edf3; line-height:1.1; }
+  .cursor { display:inline-block; width:3px; height:58px; background:#58a6ff; vertical-align:bottom; animation:blink 1s step-end infinite; margin-left:2px; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  .hero-title { color:#58a6ff; font-size:20px; margin-top:10px; }
+  .hero-desc { color:#8b949e; font-size:13px; margin-top:16px; max-width:480px; line-height:1.9; }
+  .hero-terminal { margin-top:32px; background:#0d1117; border:1px solid #30363d; border-radius:8px; padding:18px 22px; font-size:12px; width:460px; }
+  .t-line { margin-bottom:5px; }
+  .t-prompt{color:#3fb950} .t-cmd{color:#e6edf3}
+  .t-out{color:#8b949e;display:block;padding-left:14px;margin-top:2px}
+  .t-hl{color:#58a6ff}
+  .hero-btns { display:flex; gap:12px; margin-top:28px; }
+  .btn { padding:11px 24px; border-radius:6px; font-size:12px; cursor:pointer; font-family:'Courier New',monospace; letter-spacing:1px; }
+  .btn-primary { background:#58a6ff; color:#0d1117; border:none; font-weight:bold; }
+  .btn-secondary { background:transparent; color:#58a6ff; border:1px solid #58a6ff; }
+  .scroll-hint { margin-top:48px; color:#3d4451; font-size:11px; animation:bounce 2s infinite; }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(5px)} }
+
+  /* Timeline */
+  .timeline { position:relative; padding-left:30px; }
+  .timeline::before { content:''; position:absolute; left:0; top:0; bottom:0; width:1px; background:linear-gradient(to bottom,#58a6ff,#30363d); }
+  .exp-item { position:relative; margin-bottom:52px; }
+  .exp-item::before { content:''; position:absolute; left:-34px; top:5px; width:9px; height:9px; border-radius:50%; background:#58a6ff; border:2px solid #010409; }
+  .exp-item.current::before { background:#3fb950; box-shadow:0 0 10px #3fb950; }
+  .exp-role { font-size:17px; font-weight:bold; color:#e6edf3; }
+  .exp-meta { display:flex; gap:16px; margin:5px 0 12px; }
+  .exp-company{color:#58a6ff;font-size:13px} .exp-dates{color:#8b949e;font-size:11px}
+  .exp-bullets { list-style:none; }
+  .exp-bullets li { color:#8b949e; font-size:12px; line-height:1.9; padding-left:16px; position:relative; }
+  .exp-bullets li::before { content:'▸'; color:#3fb950; position:absolute; left:0; }
+  .exp-bullets strong { color:#e6edf3; }
+
+  /* Projects */
+  .projects-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+  .proj-card { background:#0d1117; border:1px solid #21262d; border-radius:10px; padding:24px; transition:all 0.25s; cursor:pointer; }
+  .proj-card:hover { border-color:#58a6ff; transform:translateY(-3px); box-shadow:0 6px 24px rgba(88,166,255,0.1); }
+  .proj-icon{font-size:28px;margin-bottom:10px}
+  .proj-name{font-size:14px;font-weight:bold;color:#e6edf3;margin-bottom:8px}
+  .proj-desc{font-size:11px;color:#8b949e;line-height:1.8;margin-bottom:14px}
+  .proj-tags{display:flex;gap:6px;flex-wrap:wrap}
+  .proj-tag{background:#161b22;color:#58a6ff;padding:3px 10px;border-radius:20px;font-size:10px;border:1px solid #30363d}
+
+  /* Skills */
+  .skills-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .skill-group{background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:22px}
+  .skill-label{font-size:9px;color:#3fb950;letter-spacing:3px;margin-bottom:14px}
+  .skill-tags{display:flex;flex-wrap:wrap;gap:8px}
+  .s-tag{padding:5px 13px;border-radius:20px;font-size:11px;border:1px solid}
+  .s-blue{color:#58a6ff;border-color:rgba(88,166,255,0.3);background:rgba(88,166,255,0.05)}
+  .s-green{color:#3fb950;border-color:rgba(63,185,80,0.3);background:rgba(63,185,80,0.05)}
+  .s-gray{color:#8b949e;border-color:#30363d;background:#161b22}
+
+  /* Contact cards */
+  .contact-cards{display:flex;gap:16px;flex-wrap:wrap}
+  .c-card{background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:22px 30px;display:flex;align-items:center;gap:14px;transition:border-color 0.2s;cursor:pointer}
+  .c-card:hover{border-color:#58a6ff}
+  .c-label{font-size:9px;color:#3fb950;letter-spacing:2px;margin-bottom:4px}
+  .c-val{color:#58a6ff;font-size:13px}
+
+  .footer{padding:28px 96px;border-top:1px solid #21262d;display:flex;justify-content:space-between;font-size:11px;color:#8b949e}
+</style>
+</head>
+<body>
+
+<div class="browser-chrome">
+  <div class="dots"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div></div>
+  <div class="url-bar" id="urlBar">aldozetina.dev/</div>
+</div>
+<div class="progress-bar" id="progress"></div>
+
+<nav class="navbar">
+  <div class="nav-logo">aldo<span>.</span>dev</div>
+  <div class="nav-links">
+    <a class="nav-link active" href="#home">#home</a>
+    <a class="nav-link" href="#experience">#experience</a>
+    <a class="nav-link" href="#projects">#projects</a>
+    <a class="nav-link" href="#skills">#skills</a>
+    <a class="nav-link" href="#contact">#contact</a>
+  </div>
+</nav>
+
+<!-- HOME -->
+<section class="section" id="home">
+  <div class="hero-pre">$ whoami</div>
+  <div class="hero-name">Aldo Zetina Muciño<span class="cursor"></span></div>
+  <div class="hero-title">Flutter Engineer · QA Automation · Infrastructure</div>
+  <div class="hero-desc">Computer Engineer from UNAM. Building reliable mobile experiences and automated systems. Currently @ Banco de México.</div>
+  <div class="hero-terminal">
+    <div class="t-line">
+      <span class="t-prompt">aldo@dev:~$</span> <span class="t-cmd"> cat about.txt</span>
+      <span class="t-out">📍 Mexico City, Mexico</span>
+      <span class="t-out">🎓 B.S. Computer Engineering — <span class="t-hl">UNAM</span> (2025)</span>
+      <span class="t-out">💼 Network Infra Intern — <span class="t-hl">Banco de México</span></span>
+      <span class="t-out">🌐 Spanish · English · Japanese (learning)</span>
+    </div>
+    <div class="t-line" style="margin-top:10px">
+      <span class="t-prompt">aldo@dev:~$</span> <span class="t-cmd"> echo $STATUS</span>
+      <span class="t-out" style="color:#3fb950">▸ Open to opportunities</span>
+    </div>
+    <div class="t-line" style="margin-top:10px">
+      <span class="t-prompt">aldo@dev:~$</span><span class="cursor" style="height:14px;width:2px;margin-left:4px;vertical-align:middle"></span>
+    </div>
+  </div>
+  <div class="hero-btns">
+    <button class="btn btn-primary">./view_projects</button>
+    <button class="btn btn-secondary">./download_cv</button>
+  </div>
+  <div class="scroll-hint">▼ &nbsp; scroll to explore</div>
+</section>
+
+<!-- EXPERIENCE -->
+<section class="section" id="experience">
+  <div class="section-label type-reveal" data-text="$ cat experience.log">$ cat experience.log</div>
+  <div class="section-title">Work <span>Experience</span></div>
+  <div class="timeline">
+    <div class="exp-item current type-reveal" data-delay="100">
+      <div class="exp-role">Network Infrastructure Intern</div>
+      <div class="exp-meta">
+        <span class="exp-company">Banco de México</span>
+        <span class="exp-dates">Fall 2024 – Spring 2026</span>
+      </div>
+      <ul class="exp-bullets">
+        <li>Designed <strong>search algorithms</strong> (binary search, hash, trie) — identity resolution across 500+ AD records</li>
+        <li>Fault-tolerant automation in <strong>Python + PowerShell</strong> → 30% fewer process failures</li>
+        <li>Event logging & auditing for production observability in critical financial systems</li>
+      </ul>
+    </div>
+    <div class="exp-item type-reveal" data-delay="200">
+      <div class="exp-role">QA Automation Engineer Intern</div>
+      <div class="exp-meta">
+        <span class="exp-company">Grupo Salinas · Elektra.mx</span>
+        <span class="exp-dates">Summer 2022 – Spring 2024</span>
+      </div>
+      <ul class="exp-bullets">
+        <li>Multiplatform mobile features for Elektra app using <strong>Flutter</strong> (Provider/Bloc)</li>
+        <li>Automated regression suites with <strong>Appium</strong> → 40% less manual testing</li>
+        <li>Mobile CI/CD pipelines in <strong>AWS CodeCommit</strong></li>
+      </ul>
+    </div>
+    <div class="exp-item type-reveal" data-delay="300">
+      <div class="exp-role">NFV Engineer (Virtualization)</div>
+      <div class="exp-meta">
+        <span class="exp-company">Huawei</span>
+        <span class="exp-dates">Summer 2021 – Spring 2022</span>
+      </div>
+      <ul class="exp-bullets">
+        <li><strong>C++</strong> client/server utilities over UNIX domain sockets in distributed Linux NFV</li>
+        <li>Infrastructure health monitoring via <strong>Bash + C++</strong> scripts</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="section" id="projects">
+  <div class="section-label type-reveal" data-text="$ ls -la projects/">$ ls -la projects/</div>
+  <div class="section-title">My <span>Projects</span></div>
+  <div class="projects-grid">
+    <div class="proj-card type-reveal" data-delay="50">
+      <div class="proj-icon">🫀</div>
+      <div class="proj-name">VR Medical Simulation — Código Infarto</div>
+      <div class="proj-desc">Real-time multiplatform VR app simulating cardiac emergency protocols with medical professionals.</div>
+      <div class="proj-tags"><span class="proj-tag">Unity</span><span class="proj-tag">C#</span><span class="proj-tag">VRChat SDK</span></div>
+    </div>
+    <div class="proj-card type-reveal" data-delay="150">
+      <div class="proj-icon">🖥️</div>
+      <div class="proj-name">Home Lab & Server Administration</div>
+      <div class="proj-desc">Personal Linux server with containerized services, network security, and uptime monitoring.</div>
+      <div class="proj-tags"><span class="proj-tag">Linux</span><span class="proj-tag">Docker</span><span class="proj-tag">Networking</span></div>
+    </div>
+    <div class="proj-card type-reveal" data-delay="250">
+      <div class="proj-icon">☕</div>
+      <div class="proj-name">Advanced SQL & Java — PROTECO</div>
+      <div class="proj-desc">Scalable backends with JDBC/Hibernate ORM + RESTful APIs. Honorable Mention PROTECO UNAM.</div>
+      <div class="proj-tags"><span class="proj-tag">Java</span><span class="proj-tag">SQL Server</span><span class="proj-tag">Hibernate</span></div>
+    </div>
+    <div class="proj-card type-reveal" data-delay="350">
+      <div class="proj-icon">👾</div>
+      <div class="proj-name">Space Invader — 2 Players</div>
+      <div class="proj-desc">Multiplayer Space Invader with independent threaded ship control. Built with pygame.</div>
+      <div class="proj-tags"><span class="proj-tag">Python</span><span class="proj-tag">pygame</span><span class="proj-tag">Threads</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section class="section" id="skills">
+  <div class="section-label type-reveal" data-text="$ cat skills.json">$ cat skills.json</div>
+  <div class="section-title">Tech <span>Stack</span></div>
+  <div class="skills-grid">
+    <div class="skill-group type-reveal" data-delay="50">
+      <div class="skill-label">MOBILE</div>
+      <div class="skill-tags">
+        <span class="s-tag s-blue">Flutter</span><span class="s-tag s-blue">Dart</span>
+        <span class="s-tag s-gray">Appium</span><span class="s-tag s-gray">Provider</span>
+        <span class="s-tag s-gray">Bloc</span><span class="s-tag s-gray">iOS/Android</span>
+      </div>
+    </div>
+    <div class="skill-group type-reveal" data-delay="150">
+      <div class="skill-label">LANGUAGES</div>
+      <div class="skill-tags">
+        <span class="s-tag s-blue">Python</span><span class="s-tag s-blue">Dart</span>
+        <span class="s-tag s-gray">Java</span><span class="s-tag s-gray">C++</span>
+        <span class="s-tag s-gray">C#</span><span class="s-tag s-gray">JavaScript</span>
+        <span class="s-tag s-gray">SQL</span><span class="s-tag s-gray">Bash</span>
+      </div>
+    </div>
+    <div class="skill-group type-reveal" data-delay="250">
+      <div class="skill-label">DEVOPS & INFRA</div>
+      <div class="skill-tags">
+        <span class="s-tag s-green">Docker</span><span class="s-tag s-green">Linux</span>
+        <span class="s-tag s-green">Git</span><span class="s-tag s-gray">AWS CodeCommit</span>
+        <span class="s-tag s-gray">CI/CD</span><span class="s-tag s-gray">Vim</span>
+      </div>
+    </div>
+    <div class="skill-group type-reveal" data-delay="350">
+      <div class="skill-label">BACKEND & APIs</div>
+      <div class="skill-tags">
+        <span class="s-tag s-gray">RESTful APIs</span><span class="s-tag s-gray">JDBC</span>
+        <span class="s-tag s-gray">Hibernate ORM</span><span class="s-tag s-gray">SQL Server</span>
+        <span class="s-tag s-gray">MySQL</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section" id="contact" style="min-height:60vh">
+  <div class="section-label type-reveal" data-text="$ cat contact.txt">$ cat contact.txt</div>
+  <div class="section-title">Get In <span>Touch</span></div>
+  <div class="contact-cards">
+    <div class="c-card type-reveal" data-delay="50">
+      <span style="font-size:22px">📧</span>
+      <div><div class="c-label">EMAIL</div><div class="c-val">zetinaa3@gmail.com</div></div>
+    </div>
+    <div class="c-card type-reveal" data-delay="150">
+      <span style="font-size:22px">🐱</span>
+      <div><div class="c-label">GITHUB</div><div class="c-val">github.com/AldoZM</div></div>
+    </div>
+    <div class="c-card type-reveal" data-delay="250">
+      <span style="font-size:22px">📱</span>
+      <div><div class="c-label">PHONE</div><div class="c-val">+52 744-272-6616</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="footer">
+  <span>aldo@dev:~$ <span style="color:#3fb950">█</span></span>
+  <span>Built with Flutter Web · 2026</span>
+</div>
+
+<script>
+// --- Progress bar ---
+window.addEventListener('scroll', () => {
+  const total = document.body.scrollHeight - window.innerHeight;
+  document.getElementById('progress').style.width = (window.scrollY / total * 100) + '%';
+
+  // Active nav
+  const sections = ['home','experience','projects','skills','contact'];
+  document.querySelectorAll('.nav-link').forEach((l,i) => {
+    const el = document.getElementById(sections[i]);
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    l.classList.toggle('active', r.top <= 120 && r.bottom > 120);
+  });
+});
+
+// --- Typewriter reveal on scroll ---
+function typeText(el, text, speed = 28) {
+  el.classList.add('typing');
+  const original = el.innerHTML;
+  // Only type plain-text labels (section-label). Cards just fade+slide in.
+  if (!el.dataset.text) {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(16px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    setTimeout(() => {
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0)';
+    }, parseInt(el.dataset.delay || 0));
+    return;
+  }
+  const target = el.dataset.text;
+  el.textContent = '';
+  let i = 0;
+  const timer = setInterval(() => {
+    el.textContent += target[i++];
+    if (i >= target.length) clearInterval(timer);
+  }, speed);
+}
+
+// IntersectionObserver — trigger when element enters viewport
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && !entry.target.classList.contains('typed')) {
+      entry.target.classList.add('typed');
+      typeText(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.type-reveal').forEach(el => {
+  // Set initial hidden state for non-label elements
+  if (!el.dataset.text) {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(16px)';
+    el.style.transition = `opacity 0.5s ease ${el.dataset.delay || 0}ms, transform 0.5s ease ${el.dataset.delay || 0}ms`;
+  }
+  observer.observe(el);
+});
+</script>
+</body>
+</html>

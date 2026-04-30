@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mobile Layout — Aldo Zetina</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#010409; font-family:'Courier New',monospace; color:#e6edf3; padding:32px; }
+
+  h2 { color:#e6edf3; font-size:20px; margin-bottom:6px; }
+  .subtitle { color:#8b949e; font-size:13px; margin-bottom:32px; }
+
+  /* ---- Layout comparison ---- */
+  .comparison { display:grid; grid-template-columns:1fr 380px; gap:32px; align-items:start; }
+
+  /* ---- Mobile frame ---- */
+  .phone-frame {
+    border:3px solid #30363d; border-radius:28px; overflow:hidden;
+    width:340px; background:#010409; position:relative;
+    box-shadow:0 20px 60px rgba(0,0,0,0.8);
+  }
+  .phone-notch { background:#0d1117; height:28px; display:flex; align-items:center; justify-content:center; border-bottom:1px solid #21262d; }
+  .phone-notch-dot { width:8px; height:8px; background:#1c2128; border-radius:50%; }
+  .phone-screen { overflow-y:auto; max-height:640px; }
+
+  /* ---- Mobile UI ---- */
+  .m-navbar {
+    background:rgba(1,4,9,0.97); border-bottom:1px solid #21262d;
+    padding:14px 20px; display:flex; align-items:center; justify-content:space-between;
+    position:sticky; top:0; z-index:10;
+  }
+  .m-logo { color:#58a6ff; font-size:13px; font-weight:bold; letter-spacing:2px; }
+  .m-logo span { color:#3fb950; }
+  .hamburger { display:flex; flex-direction:column; gap:4px; cursor:pointer; padding:4px; }
+  .hamburger span { width:20px; height:2px; background:#8b949e; border-radius:1px; transition:all 0.3s; display:block; }
+  .hamburger.open span:nth-child(1) { transform:rotate(45deg) translate(4px,4px); background:#58a6ff; }
+  .hamburger.open span:nth-child(2) { opacity:0; }
+  .hamburger.open span:nth-child(3) { transform:rotate(-45deg) translate(4px,-4px); background:#58a6ff; }
+
+  /* Slide menu */
+  .m-menu {
+    position:absolute; top:0; left:0; right:0; bottom:0;
+    background:rgba(1,4,9,0.98); z-index:20;
+    display:flex; flex-direction:column; justify-content:center; align-items:center; gap:28px;
+    opacity:0; pointer-events:none; transition:opacity 0.3s;
+  }
+  .m-menu.open { opacity:1; pointer-events:all; }
+  .m-menu-link { color:#8b949e; font-size:20px; letter-spacing:2px; cursor:pointer; transition:color 0.2s; }
+  .m-menu-link:hover { color:#58a6ff; }
+  .m-close { position:absolute; top:20px; right:20px; color:#8b949e; font-size:22px; cursor:pointer; }
+
+  /* Mobile sections */
+  .m-section { padding:48px 22px; border-bottom:1px solid #0d1117; }
+  .m-label { font-size:10px; color:#3fb950; letter-spacing:2px; margin-bottom:6px; }
+  .m-title { font-size:26px; font-weight:bold; margin-bottom:24px; }
+  .m-title span { color:#58a6ff; }
+
+  /* Hero mobile */
+  .m-hero { padding:52px 22px 40px; }
+  .m-pre { color:#3fb950; font-size:11px; margin-bottom:8px; letter-spacing:1px; }
+  .m-name { font-size:30px; font-weight:bold; line-height:1.15; color:#e6edf3; }
+  .m-cursor { display:inline-block; width:2px; height:28px; background:#58a6ff; vertical-align:bottom; animation:blink 1s step-end infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  .m-job { color:#58a6ff; font-size:13px; margin-top:8px; line-height:1.5; }
+  .m-terminal { margin-top:20px; background:#0d1117; border:1px solid #30363d; border-radius:8px; padding:14px 16px; font-size:11px; }
+  .t-p{color:#3fb950} .t-c{color:#e6edf3} .t-o{color:#8b949e;display:block;padding-left:12px;margin-top:2px} .t-h{color:#58a6ff}
+  .m-btns { display:flex; flex-direction:column; gap:10px; margin-top:22px; }
+  .m-btn { padding:12px; border-radius:6px; font-size:12px; text-align:center; font-family:'Courier New',monospace; letter-spacing:1px; cursor:pointer; }
+  .m-btn-primary { background:#58a6ff; color:#0d1117; border:none; font-weight:bold; }
+  .m-btn-secondary { background:transparent; color:#58a6ff; border:1px solid #58a6ff; }
+
+  /* Timeline mobile */
+  .m-timeline { padding-left:20px; border-left:1px solid #30363d; }
+  .m-exp { position:relative; margin-bottom:32px; }
+  .m-exp::before { content:''; position:absolute; left:-24px; top:4px; width:7px; height:7px; border-radius:50%; background:#58a6ff; border:2px solid #010409; }
+  .m-exp.cur::before { background:#3fb950; box-shadow:0 0 6px #3fb950; }
+  .m-role { font-size:14px; font-weight:bold; color:#e6edf3; }
+  .m-company { color:#58a6ff; font-size:11px; margin:2px 0; }
+  .m-dates { color:#8b949e; font-size:10px; margin-bottom:8px; }
+  .m-bullets { list-style:none; }
+  .m-bullets li { color:#8b949e; font-size:11px; line-height:1.7; padding-left:12px; position:relative; margin-bottom:2px; }
+  .m-bullets li::before { content:'▸'; color:#3fb950; position:absolute; left:0; font-size:10px; }
+  .m-bullets strong { color:#e6edf3; }
+
+  /* Projects mobile — single col */
+  .m-proj { background:#0d1117; border:1px solid #21262d; border-radius:8px; padding:18px; margin-bottom:12px; }
+  .m-proj-icon { font-size:22px; margin-bottom:8px; }
+  .m-proj-name { font-size:13px; font-weight:bold; color:#e6edf3; margin-bottom:6px; }
+  .m-proj-desc { font-size:10px; color:#8b949e; line-height:1.7; margin-bottom:10px; }
+  .m-tags { display:flex; flex-wrap:wrap; gap:6px; }
+  .m-tag { background:#161b22; color:#58a6ff; padding:2px 8px; border-radius:12px; font-size:9px; border:1px solid #30363d; }
+
+  /* Skills mobile */
+  .m-skill-group { background:#0d1117; border:1px solid #21262d; border-radius:8px; padding:16px; margin-bottom:12px; }
+  .m-skill-label { font-size:9px; color:#3fb950; letter-spacing:2px; margin-bottom:10px; }
+  .m-skill-tags { display:flex; flex-wrap:wrap; gap:6px; }
+  .ms { padding:4px 10px; border-radius:12px; font-size:10px; border:1px solid; }
+  .ms-b{color:#58a6ff;border-color:rgba(88,166,255,0.3);background:rgba(88,166,255,0.05)}
+  .ms-g{color:#3fb950;border-color:rgba(63,185,80,0.3);background:rgba(63,185,80,0.05)}
+  .ms-gray{color:#8b949e;border-color:#30363d;background:#161b22}
+
+  /* Contact mobile */
+  .m-contact-card { background:#0d1117; border:1px solid #21262d; border-radius:8px; padding:16px 18px; margin-bottom:10px; display:flex; align-items:center; gap:12px; }
+  .m-c-label { font-size:9px; color:#3fb950; letter-spacing:2px; margin-bottom:3px; }
+  .m-c-val { color:#58a6ff; font-size:12px; }
+
+  /* ---- Desktop info panel ---- */
+  .info-panel { }
+  .info-title { font-size:14px; color:#3fb950; letter-spacing:2px; margin-bottom:16px; font-weight:bold; }
+  .change-item { margin-bottom:16px; }
+  .change-label { font-size:10px; color:#58a6ff; letter-spacing:1px; margin-bottom:4px; }
+  .change-desc { font-size:12px; color:#8b949e; line-height:1.7; }
+  .change-before { color:#f85149; text-decoration:line-through; font-size:11px; }
+  .change-after { color:#3fb950; font-size:11px; }
+
+  .breakpoints { margin-top:24px; }
+  .bp { display:flex; align-items:center; gap:10px; margin-bottom:8px; font-size:11px; }
+  .bp-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .bp-label { color:#8b949e; }
+  .bp-val { color:#e6edf3; margin-left:auto; font-size:10px; }
+</style>
+</head>
+<body>
+
+<h2>Mobile Adaptation</h2>
+<p class="subtitle">Mismo diseño Dark Minimal — adaptado para pantallas pequeñas. Scrollea dentro del teléfono.</p>
+
+<div class="comparison">
+
+  <!-- INFO PANEL -->
+  <div class="info-panel">
+    <div class="info-title">// CAMBIOS VS DESKTOP</div>
+
+    <div class="change-item">
+      <div class="change-label">NAVBAR</div>
+      <div class="change-desc">Links ocultos → botón hamburger ☰<br>Al tocar: menú full-screen con animación</div>
+      <div style="margin-top:4px"><span class="change-before">nav horizontal</span> → <span class="change-after">hamburger + overlay</span></div>
+    </div>
+
+    <div class="change-item">
+      <div class="change-label">HERO</div>
+      <div class="change-desc">Nombre más pequeño (30px vs 60px), botones apilados verticalmente, terminal compacta</div>
+    </div>
+
+    <div class="change-item">
+      <div class="change-label">PROJECTS GRID</div>
+      <div class="change-desc">Grid 2 columnas → 1 columna. Tarjetas full width.</div>
+      <div style="margin-top:4px"><span class="change-before">2 cols</span> → <span class="change-after">1 col</span></div>
+    </div>
+
+    <div class="change-item">
+      <div class="change-label">SKILLS GRID</div>
+      <div class="change-desc">Grid 2×2 → lista vertical. Cada grupo ocupa el ancho completo.</div>
+      <div style="margin-top:4px"><span class="change-before">2×2 grid</span> → <span class="change-after">stack vertical</span></div>
+    </div>
+
+    <div class="change-item">
+      <div class="change-label">CONTACT</div>
+      <div class="change-desc">Cards horizontales → apiladas, full width.</div>
+    </div>
+
+    <div class="change-item">
+      <div class="change-label">PADDING</div>
+      <div class="change-desc">96px → 22px horizontal. 100px → 48px vertical por sección.</div>
+    </div>
+
+    <div class="breakpoints">
+      <div class="info-title">// BREAKPOINTS FLUTTER</div>
+      <div class="bp"><div class="bp-dot" style="background:#f85149"></div><div class="bp-label">Mobile</div><div class="bp-val">&lt; 600px</div></div>
+      <div class="bp"><div class="bp-dot" style="background:#d29922"></div><div class="bp-label">Tablet</div><div class="bp-val">600–1024px</div></div>
+      <div class="bp"><div class="bp-dot" style="background:#3fb950"></div><div class="bp-label">Desktop</div><div class="bp-val">&gt; 1024px</div></div>
+    </div>
+
+    <div style="margin-top:24px;background:#0d1117;border:1px solid #21262d;border-radius:8px;padding:16px;font-size:11px;color:#8b949e;line-height:1.8">
+      En Flutter se implementa con<br>
+      <span style="color:#58a6ff">LayoutBuilder</span> + <span style="color:#58a6ff">MediaQuery</span><br>
+      Un solo widget tree, dos layouts.<br>
+      Sin duplicar código.
+    </div>
+  </div>
+
+  <!-- PHONE MOCKUP -->
+  <div>
+    <div class="phone-frame">
+      <div class="phone-notch"><div class="phone-notch-dot"></div></div>
+      <div class="phone-screen" id="phoneScreen">
+
+        <!-- Mobile navbar -->
+        <div class="m-navbar">
+          <div class="m-logo">aldo<span>.</span>dev</div>
+          <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+
+        <!-- Slide menu overlay -->
+        <div class="m-menu" id="mMenu">
+          <div class="m-close" onclick="toggleMenu()">✕</div>
+          <div class="m-menu-link" onclick="scrollTo('mHome');toggleMenu()">#home</div>
+          <div class="m-menu-link" onclick="scrollTo('mExp');toggleMenu()">#experience</div>
+          <div class="m-menu-link" onclick="scrollTo('mProj');toggleMenu()">#projects</div>
+          <div class="m-menu-link" onclick="scrollTo('mSkills');toggleMenu()">#skills</div>
+          <div class="m-menu-link" onclick="scrollTo('mContact');toggleMenu()">#contact</div>
+        </div>
+
+        <!-- Hero -->
+        <div class="m-hero" id="mHome">
+          <div class="m-pre">$ whoami</div>
+          <div class="m-name">Aldo Zetina<br>Muciño<span class="m-cursor"></span></div>
+          <div class="m-job">Flutter Engineer · QA Automation<br>Infrastructure</div>
+          <div class="m-terminal">
+            <span class="t-p">aldo@dev:~$</span><span class="t-c"> cat about.txt</span>
+            <span class="t-o">📍 Mexico City, Mexico</span>
+            <span class="t-o">🎓 <span class="t-h">UNAM</span> Computer Eng. (2025)</span>
+            <span class="t-o">💼 <span class="t-h">Banco de México</span></span>
+            <span class="t-o" style="color:#3fb950">▸ Open to opportunities</span>
+          </div>
+          <div class="m-btns">
+            <button class="m-btn m-btn-primary">./view_projects</button>
+            <button class="m-btn m-btn-secondary">./download_cv</button>
+          </div>
+        </div>
+
+        <!-- Experience -->
+        <div class="m-section" id="mExp">
+          <div class="m-label">$ cat experience.log</div>
+          <div class="m-title">Work <span>Experience</span></div>
+          <div class="m-timeline">
+            <div class="m-exp cur">
+              <div class="m-role">Network Infrastructure Intern</div>
+              <div class="m-company">Banco de México</div>
+              <div class="m-dates">Fall 2024 – Spring 2026</div>
+              <ul class="m-bullets">
+                <li>Search algorithms for 500+ <strong>Active Directory</strong> records</li>
+                <li><strong>Python + PowerShell</strong> automation → 30% fewer failures</li>
+              </ul>
+            </div>
+            <div class="m-exp">
+              <div class="m-role">QA Automation Engineer Intern</div>
+              <div class="m-company">Grupo Salinas · Elektra.mx</div>
+              <div class="m-dates">Summer 2022 – Spring 2024</div>
+              <ul class="m-bullets">
+                <li>Mobile features using <strong>Flutter</strong> (Provider/Bloc)</li>
+                <li><strong>Appium</strong> regression suites → 40% less manual QA</li>
+              </ul>
+            </div>
+            <div class="m-exp">
+              <div class="m-role">NFV Engineer</div>
+              <div class="m-company">Huawei</div>
+              <div class="m-dates">Summer 2021 – Spring 2022</div>
+              <ul class="m-bullets">
+                <li><strong>C++</strong> UNIX socket utilities for Linux NFV</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Projects -->
+        <div class="m-section" id="mProj">
+          <div class="m-label">$ ls projects/</div>
+          <div class="m-title">My <span>Projects</span></div>
+          <div class="m-proj">
+            <div class="m-proj-icon">🫀</div>
+            <div class="m-proj-name">VR Medical Simulation</div>
+            <div class="m-proj-desc">Real-time VR cardiac emergency app with medical professionals.</div>
+            <div class="m-tags"><span class="m-tag">Unity</span><span class="m-tag">C#</span><span class="m-tag">VRChat SDK</span></div>
+          </div>
+          <div class="m-proj">
+            <div class="m-proj-icon">🖥️</div>
+            <div class="m-proj-name">Home Lab & Server Admin</div>
+            <div class="m-proj-desc">Personal Linux server with Docker and network security.</div>
+            <div class="m-tags"><span class="m-tag">Linux</span><span class="m-tag">Docker</span></div>
+          </div>
+          <div class="m-proj">
+            <div class="m-proj-icon">☕</div>
+            <div class="m-proj-name">Advanced SQL & Java — PROTECO</div>
+            <div class="m-proj-desc">Scalable REST backends. Honorable Mention UNAM.</div>
+            <div class="m-tags"><span class="m-tag">Java</span><span class="m-tag">Hibernate</span></div>
+          </div>
+          <div class="m-proj">
+            <div class="m-proj-icon">👾</div>
+            <div class="m-proj-name">Space Invader — 2 Players</div>
+            <div class="m-proj-desc">Multiplayer pygame game with threaded ship control.</div>
+            <div class="m-tags"><span class="m-tag">Python</span><span class="m-tag">pygame</span></div>
+          </div>
+        </div>
+
+        <!-- Skills -->
+        <div class="m-section" id="mSkills">
+          <div class="m-label">$ cat skills.json</div>
+          <div class="m-title">Tech <span>Stack</span></div>
+          <div class="m-skill-group">
+            <div class="m-skill-label">MOBILE</div>
+            <div class="m-skill-tags">
+              <span class="ms ms-b">Flutter</span><span class="ms ms-b">Dart</span>
+              <span class="ms ms-gray">Appium</span><span class="ms ms-gray">Bloc</span>
+            </div>
+          </div>
+          <div class="m-skill-group">
+            <div class="m-skill-label">LANGUAGES</div>
+            <div class="m-skill-tags">
+              <span class="ms ms-b">Python</span><span class="ms ms-b">Dart</span>
+              <span class="ms ms-gray">Java</span><span class="ms ms-gray">C++</span>
+              <span class="ms ms-gray">C#</span><span class="ms ms-gray">SQL</span>
+            </div>
+          </div>
+          <div class="m-skill-group">
+            <div class="m-skill-label">DEVOPS</div>
+            <div class="m-skill-tags">
+              <span class="ms ms-g">Docker</span><span class="ms ms-g">Linux</span>
+              <span class="ms ms-g">Git</span><span class="ms ms-gray">CI/CD</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact -->
+        <div class="m-section" id="mContact">
+          <div class="m-label">$ cat contact.txt</div>
+          <div class="m-title">Get In <span>Touch</span></div>
+          <div class="m-contact-card"><span style="font-size:18px">📧</span><div><div class="m-c-label">EMAIL</div><div class="m-c-val">zetinaa3@gmail.com</div></div></div>
+          <div class="m-contact-card"><span style="font-size:18px">🐱</span><div><div class="m-c-label">GITHUB</div><div class="m-c-val">github.com/AldoZM</div></div></div>
+          <div class="m-contact-card"><span style="font-size:18px">📱</span><div><div class="m-c-label">PHONE</div><div class="m-c-val">+52 744-272-6616</div></div></div>
+        </div>
+
+        <div style="padding:20px 22px;border-top:1px solid #21262d;font-size:10px;color:#8b949e;text-align:center">
+          aldo@dev:~$ <span style="color:#3fb950">█</span>
+        </div>
+
+      </div><!-- phone-screen -->
+    </div><!-- phone-frame -->
+  </div>
+
+</div><!-- comparison -->
+
+<script>
+function toggleMenu() {
+  const h = document.getElementById('hamburger');
+  const m = document.getElementById('mMenu');
+  h.classList.toggle('open');
+  m.classList.toggle('open');
+}
+function scrollTo(id) {
+  document.getElementById(id).scrollIntoView({ behavior:'smooth' });
+}
+</script>
+</body>
+</html>

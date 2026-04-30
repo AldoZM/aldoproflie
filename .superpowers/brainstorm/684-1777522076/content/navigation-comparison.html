@@ -1,0 +1,75 @@
+<h2>¿Cómo funciona cada opción?</h2>
+<p class="subtitle">Elige la que prefieras después de ver la diferencia</p>
+
+<div class="split">
+
+  <div class="mockup" data-choice="single-page" onclick="toggleSelect(this)" style="cursor:pointer;">
+    <div class="mockup-header">A — Una sola página (scroll)</div>
+    <div class="mockup-body" style="background:#0d1117;padding:12px;font-family:monospace;">
+      <div style="background:#161b22;border-bottom:1px solid #30363d;padding:6px 10px;display:flex;gap:12px;font-size:10px;color:#8b949e;">
+        <span style="color:#58a6ff;">aldozetina.dev</span>
+        <span style="margin-left:auto;">🔗 #about | #projects | #skills</span>
+      </div>
+      <div style="padding:10px;font-size:10px;">
+        <div style="color:#58a6ff;border-left:2px solid #58a6ff;padding-left:6px;margin-bottom:10px;">
+          <div style="color:#e6edf3;font-weight:bold;">$ whoami</div>
+          <div style="color:#8b949e;">Aldo Zetina — Eng.</div>
+        </div>
+        <div style="color:#3d4b5c;text-align:center;font-size:9px;">▼ scroll ▼</div>
+        <div style="color:#58a6ff;border-left:2px solid #58a6ff;padding-left:6px;margin:10px 0;">
+          <div style="color:#e6edf3;font-weight:bold;">$ cat education.txt</div>
+          <div style="color:#8b949e;">UNAM · 81/100</div>
+        </div>
+        <div style="color:#3d4b5c;text-align:center;font-size:9px;">▼ scroll ▼</div>
+        <div style="color:#58a6ff;border-left:2px solid #58a6ff;padding-left:6px;margin-top:10px;">
+          <div style="color:#e6edf3;font-weight:bold;">$ ls projects/</div>
+          <div style="color:#8b949e;">tetris/ space-invader/ shop/</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mockup" data-choice="multi-route" onclick="toggleSelect(this)" style="cursor:pointer;">
+    <div class="mockup-header">B — Múltiples rutas</div>
+    <div class="mockup-body" style="background:#0d1117;padding:12px;font-family:monospace;">
+      <div style="background:#161b22;border-bottom:1px solid #30363d;padding:6px 10px;display:flex;gap:12px;font-size:10px;">
+        <span style="color:#58a6ff;">aldozetina.dev<span style="color:#ffa657;">/projects</span></span>
+      </div>
+      <div style="display:flex;height:120px;">
+        <div style="background:#161b22;width:70px;padding:8px;font-size:9px;border-right:1px solid #30363d;">
+          <div style="color:#58a6ff;margin-bottom:4px;">~/home</div>
+          <div style="color:#8b949e;margin-bottom:4px;">~/about</div>
+          <div style="color:#ffa657;margin-bottom:4px;font-weight:bold;">~/projects</div>
+          <div style="color:#8b949e;margin-bottom:4px;">~/skills</div>
+          <div style="color:#8b949e;">~/contact</div>
+        </div>
+        <div style="padding:8px;font-size:9px;color:#e6edf3;flex:1;">
+          <div style="color:#ffa657;font-weight:bold;margin-bottom:6px;">$ ls projects/</div>
+          <div style="background:#21262d;padding:4px 6px;border-radius:4px;margin-bottom:4px;color:#58a6ff;">🎮 Tetris</div>
+          <div style="background:#21262d;padding:4px 6px;border-radius:4px;margin-bottom:4px;color:#58a6ff;">👾 Space Invader 2P</div>
+          <div style="background:#21262d;padding:4px 6px;border-radius:4px;color:#58a6ff;">🛒 Online Shop</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div style="margin-top:24px;display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:13px;">
+  <div style="background:rgba(88,166,255,0.05);border:1px solid #30363d;border-radius:8px;padding:12px;">
+    <div style="color:#58a6ff;font-weight:bold;margin-bottom:8px;">A · Una página</div>
+    <div style="color:#7ee787;margin-bottom:4px;">✓ Más simple de hacer en Flutter</div>
+    <div style="color:#7ee787;margin-bottom:4px;">✓ Todo visible sin navegar</div>
+    <div style="color:#7ee787;margin-bottom:4px;">✓ Reclutadores ven todo de un vistazo</div>
+    <div style="color:#f85149;margin-bottom:4px;">✗ Si crece, se vuelve largo</div>
+    <div style="color:#8b949e;font-size:11px;margin-top:8px;">URL siempre: <code style="color:#ffa657;">aldozetina.dev/#projects</code></div>
+  </div>
+  <div style="background:rgba(88,166,255,0.05);border:1px solid #30363d;border-radius:8px;padding:12px;">
+    <div style="color:#58a6ff;font-weight:bold;margin-bottom:8px;">B · Múltiples rutas</div>
+    <div style="color:#7ee787;margin-bottom:4px;">✓ Más organizado, cada sección = página</div>
+    <div style="color:#7ee787;margin-bottom:4px;">✓ URLs únicas por sección</div>
+    <div style="color:#f85149;margin-bottom:4px;">✗ Más complejo (Flutter Router)</div>
+    <div style="color:#f85149;margin-bottom:4px;">✗ Reclutador tiene que navegar más</div>
+    <div style="color:#8b949e;font-size:11px;margin-top:8px;">URLs: <code style="color:#ffa657;">aldozetina.dev/projects</code></div>
+  </div>
+</div>
