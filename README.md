@@ -67,12 +67,16 @@ flutter run -d chrome
 
 ## Deploy to GitHub Pages
 
-```bash
-# Build with correct base-href
-flutter build web --release --base-href /aldoproflie/
+> **Windows:** use PowerShell for the build step — bash mangles the `--base-href` flag.
 
-# Copy build output to gh-pages branch and push
-git worktree add /tmp/gh-pages gh-pages
+```powershell
+# Build with correct base-href (PowerShell)
+flutter build web --release --base-href "/aldoproflie/"
+```
+
+```bash
+# Copy build output to gh-pages branch and push (Git Bash / WSL)
+# First time only: git worktree add /tmp/gh-pages gh-pages
 cp -r build/web/. /tmp/gh-pages/
 cd /tmp/gh-pages && git add -A && git commit -m "deploy: update build" && git push origin gh-pages
 ```
