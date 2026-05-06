@@ -126,7 +126,7 @@ class _NavDelegate extends SliverPersistentHeaderDelegate {
   @override double get maxExtent => height;
 
   @override
-  Widget build(BuildContext c, double shrinkOffset, bool overlaps) => child;
+  Widget build(BuildContext c, double shrinkOffset, bool overlaps) => SizedBox.expand(child: child);
 
   @override
   bool shouldRebuild(_NavDelegate old) => old.child != child;
