@@ -83,7 +83,7 @@ class _HeroSectionState extends State<HeroSection> {
           ),
           const SizedBox(height: 10),
           if (_showTitle) TypewriterText(
-            text: 'Flutter Engineer · QA Automation · Infrastructure',
+            text: 'Database Engineer · QA Automation · Flutter Developer',
             charDelayMs: 18,
             style: TextStyle(fontSize: isMobile ? 13 : 20, color: AppTheme.accentBlue),
           ),
@@ -113,7 +113,7 @@ class _HeroSectionState extends State<HeroSection> {
                     ]),
                     if (_outputs[0]) const TerminalOutput(text: '📍 Mexico City, Mexico'),
                     if (_outputs[1]) const TerminalOutput(text: '🎓 B.S. Computer Engineering — UNAM (2025)'),
-                    if (_outputs[2]) const TerminalOutput(text: '💼 Network Infra Intern — Banco de México'),
+                    if (_outputs[2]) const TerminalOutput(text: '💼 Database Engineering Intern — Banco de México'),
                     if (_outputs[3]) const TerminalOutput(text: '▸ Open to opportunities', color: AppTheme.accentGreen),
                     const SizedBox(height: 10),
                     Row(children: [
