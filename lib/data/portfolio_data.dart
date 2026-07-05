@@ -105,6 +105,13 @@ class PortfolioData {
       description: 'Complex query design, stored procedures, and database optimization (Honorable Mention), plus OOP and scalable application development in Java.',
       tags: ['Java', 'SQL', 'Stored Procedures', 'OOP'],
     ),
+    Project(
+      icon: '🍔',
+      name: 'Food Match',
+      description: 'Aplicación para descubrir y hacer match con tus comidas favoritas.',
+      tags: ['Flutter', 'Dart'],
+      githubUrl: 'https://github.com/AldoZM/Food_Match',
+    ),
   ];
 
   static const List<SkillGroup> skillGroups = [
