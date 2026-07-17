@@ -25,16 +25,39 @@ class Job {
   });
 }
 
+class StackLayer {
+  final String label;          // "Backend", "Mobile", "Infrastructure"
+  final List<String> techs;
+  const StackLayer(this.label, this.techs);
+}
+
 class Project {
-  final String icon, name, description;
+  final String icon;
+  final String name;
+  final String period;
+  final String summary;              // visible con la tarjeta cerrada
+  final String role;                 // qué hizo él, no el equipo
+  final List<String> highlights;     // viñetas al expandir
+  final List<StackLayer> stack;
+  final String? githubUrl;           // null = sin enlace
+  final String? note;                // "Private repository", etc.
+
+  // Legados: los retira la Task 5, cuando ProjectCard deje de usarlos.
+  final String description;
   final List<String> tags;
-  final String? githubUrl;
+
   const Project({
     required this.icon,
     required this.name,
+    required this.period,
+    required this.summary,
+    required this.role,
+    required this.highlights,
+    required this.stack,
+    this.githubUrl,
+    this.note,
     required this.description,
     required this.tags,
-    this.githubUrl,
   });
 }
 
@@ -84,30 +107,55 @@ class PortfolioData {
     Project(
       icon: '📱',
       name: 'Mobile App with Flutter',
+      period: '—',
+      summary: '',
+      role: '',
+      highlights: const [],
+      stack: const [],
       description: 'Cross-platform mobile application development with Flutter and Dart — REST API consumption, state management, and adaptive UI for iOS and Android. (2025–Present)',
       tags: ['Flutter', 'Dart', 'REST APIs', 'iOS/Android'],
     ),
     Project(
       icon: '🫀',
       name: 'VR Medical Simulation — Código Infarto',
+      period: '—',
+      summary: '',
+      role: '',
+      highlights: const [],
+      stack: const [],
       description: 'Interactive VR module simulating cardiac emergency protocols, built with Unity and C#. Interaction logic and flow validation developed alongside medical professionals. (2026–Present)',
       tags: ['Unity', 'C#', 'VR', 'Interaction Logic'],
     ),
     Project(
       icon: '🖥️',
       name: 'Home Lab & Network Administration',
+      period: '—',
+      summary: '',
+      role: '',
+      highlights: const [],
+      stack: const [],
       description: 'Linux server configured with service monitoring, security rules, and access control for continuous availability. (2026)',
       tags: ['Linux', 'Networking', 'Monitoring', 'Security'],
     ),
     Project(
       icon: '☕',
       name: 'Advanced SQL & Java — PROTECO UNAM',
+      period: '—',
+      summary: '',
+      role: '',
+      highlights: const [],
+      stack: const [],
       description: 'Complex query design, stored procedures, and database optimization (Honorable Mention), plus OOP and scalable application development in Java.',
       tags: ['Java', 'SQL', 'Stored Procedures', 'OOP'],
     ),
     Project(
       icon: '🍔',
       name: 'Food Match',
+      period: '—',
+      summary: '',
+      role: '',
+      highlights: const [],
+      stack: const [],
       description: 'Aplicación para descubrir y hacer match con tus comidas favoritas.',
       tags: ['Flutter', 'Dart'],
       githubUrl: 'https://github.com/AldoZM/Food_Match',
