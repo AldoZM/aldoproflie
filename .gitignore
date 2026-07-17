@@ -43,3 +43,12 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Scratch de subagent-driven-development (briefs, reportes, ledger de progreso).
+# Es estado de trabajo local, no historial del proyecto.
+.superpowers/
+
+# El CV NO se commitea aqui: este repositorio es publico y el PDF actual tiene
+# el apellido mal escrito ("Muñino" en vez de "Muciño"). Cuando este corregido
+# va en web/ para que Flutter lo copie al build, no en la raiz.
+Aldo_Zetina_CV*.pdf

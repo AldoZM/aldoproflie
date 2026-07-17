@@ -67,8 +67,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:aldo_portfolio/main.dart';
 
 /// Monta la app con un viewport fijo. `size` por defecto = escritorio.
-/// El pump de 3s deja terminar la secuencia typewriter del hero, que
-/// encadena delays hasta ~2.6s antes de mostrar los botones.
+///
+/// Bombea en ciclos en vez de usar `pumpAndSettle()`: el cursor del hero es un
+/// `Timer.periodic` perpetuo (`hero_section.dart:197`, `typewriter_text.dart:64`)
+/// y `pumpAndSettle` nunca convergería. 10s cubren la secuencia completa del
+/// hero (~2.6s de delays encadenados más el tecleo carácter por carácter).
 Future<void> pumpPortfolio(
   WidgetTester tester, {
   Size size = const Size(1400, 900),
@@ -77,11 +80,31 @@ Future<void> pumpPortfolio(
   tester.view.devicePixelRatio = 1.0;
   addTearDown(tester.view.reset);
   await tester.pumpWidget(const PortfolioApp());
-  await tester.pump(const Duration(seconds: 3));
+  for (int i = 0; i < 20; i++) {
+    await tester.pump(const Duration(milliseconds: 500));
+  }
 }
+
+/// Busca texto renderizado por `TypewriterText`.
+///
+/// `find.text()` NO sirve para esos textos: solo encuentra `Text` y
+/// `EditableText`, y `TypewriterText.build` devuelve un `RichText`
+/// (`typewriter_text.dart:82`). Sin esto, las aserciones sobre el nombre,
+/// el titular y la descripción del hero fallan aunque el texto sí esté en
+/// pantalla. `includePlaceholders: false` descarta el WidgetSpan del cursor.
+Finder findTypewriterText(String text) => find.byWidgetPredicate(
+      (w) =>
+          w is RichText &&
+          w.text.toPlainText(includePlaceholders: false).contains(text),
+      description: 'RichText que contiene "$text"',
+    );
 ```
 
 - [ ] **Step 3: Reemplazar la plantilla por un smoke test real**
+
+Las aserciones deben verificar **contenido de esta app**, no que exista un
+`Scaffold`: cualquier app de Flutter en blanco tiene uno, así que una prueba
+así pasa siempre y no protege nada.
 
 Contenido completo de `test/widget_test.dart`:
 
@@ -93,7 +116,7 @@ import 'helpers.dart';
 void main() {
   testWidgets('la app monta y renderiza el nombre', (tester) async {
     await pumpPortfolio(tester);
-    expect(find.text('Aldo Zetina Muciño'), findsOneWidget);
+    expect(findTypewriterText('Aldo Zetina Muciño'), findsOneWidget);
   });
 
   testWidgets('renderiza el scroll principal', (tester) async {
@@ -1127,10 +1150,18 @@ void main() {
     expect(all, isNot(contains('C#')));
   });
 
+  // El titular lo pinta TypewriterText, que devuelve RichText: hay que usar
+  // findTypewriterText, no find.text (ver helpers.dart).
   testWidgets('el hero muestra el titular nuevo', (tester) async {
     await pumpPortfolio(tester);
-    expect(find.text('Software Engineer · Backend & APIs · Mobile'), findsOneWidget);
-    expect(find.textContaining('Database Engineer'), findsNothing);
+    expect(findTypewriterText('Software Engineer · Backend & APIs · Mobile'),
+        findsOneWidget);
+  });
+
+  testWidgets('el hero ya no dice Database Engineer ni QA Automation', (tester) async {
+    await pumpPortfolio(tester);
+    expect(findTypewriterText('Database Engineer'), findsNothing);
+    expect(findTypewriterText('QA Automation'), findsNothing);
   });
 }
 ```
@@ -1224,7 +1255,7 @@ En `lib/widgets/sections/hero_section.dart`:
 - [ ] **Step 6: Ejecutar la suite**
 
 Run: `flutter test`
-Expected: PASS — 25 pruebas.
+Expected: PASS — 26 pruebas.
 
 - [ ] **Step 7: Commit**
 
@@ -1358,7 +1389,7 @@ En `lib/data/portfolio_data.dart:46`, reemplazar:
 - [ ] **Step 7: Ejecutar la suite**
 
 Run: `flutter test`
-Expected: PASS — 28 pruebas.
+Expected: PASS — 29 pruebas.
 
 - [ ] **Step 8: Commit**
 
@@ -1464,7 +1495,7 @@ por:
 - [ ] **Step 6: Ejecutar la suite**
 
 Run: `flutter test`
-Expected: PASS — 30 pruebas.
+Expected: PASS — 31 pruebas.
 
 - [ ] **Step 7: Commit**
 
@@ -1737,7 +1768,7 @@ git push origin --delete gh-pages
 
 ## Verificación final
 
-- [ ] `flutter test` — **30 pruebas** en verde
+- [ ] `flutter test` — **31 pruebas** en verde
 - [ ] `flutter analyze` — sin issues
 - [ ] Abrir el sitio en escritorio: **3 tarjetas visibles**, la de Banxico abierta
       (hoy solo se ven 4 de 5 y Food Match no aparece nunca)

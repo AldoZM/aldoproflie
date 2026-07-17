@@ -1,0 +1,179 @@
+CONTEXTO DE TRABAJO — Portafolio de Aldo Zetina Muciño
+Ultima sesion: 2026-07-17
+Rama: feat/backend-mobile-repositioning
+
+AVISO: este repositorio es PUBLICO. No escribir aqui contrasenas, llaves,
+rutas privadas ni detalles de seguridad de otros repositorios. Este archivo
+es un resumen de trabajo, nada mas.
+
+
+================================================================
+1. QUE ESTAMOS HACIENDO Y POR QUE
+================================================================
+
+El portafolio no estaba "sin pulir": estaba MAL. Al contrastarlo contra el CV
+(Aldo_Zetina_CV_Java_EN.pdf) aparecio que la pagina vende a Aldo por debajo de
+lo que su propio CV respalda.
+
+Diagnostico principal:
+
+  - El titular decia "Database Engineer · QA Automation · Flutter Developer":
+    dos casilleros de los que quiere salir, mas una herramienta que no es su
+    especialidad. Sus lenguajes reales son Java, C++, Python y JavaScript.
+  - El CV dice "Software Engineer Intern" en Banco de Mexico; la pagina decia
+    "Database Engineering Intern".
+  - La mejor prueba de backend NO estaba en la pagina: una plataforma fullstack
+    con Java/Spring y endpoints REST construida en un banco central.
+  - El grupo de skills "Backend & APIs" se aprobo en el diseno de abril de 2026
+    y nunca se implemento.
+  - La causa raiz no era falta de contenido: el modelo Project (icono, nombre,
+    descripcion, etiquetas planas) no tenia DONDE poner la historia.
+
+Decision de posicionamiento (elegida por Aldo):
+
+    Software Engineer · Backend & APIs · Mobile
+
+Backend primero, mobile como capacidad real. Coincide con su titulo real y con
+sus cuatro lenguajes.
+
+Documentos (leer en este orden):
+  - docs/superpowers/specs/2026-07-17-portfolio-backend-mobile-design.md
+  - docs/superpowers/plans/2026-07-17-portfolio-backend-mobile.md
+
+
+================================================================
+2. BUGS EN VIVO QUE SE ENCONTRARON
+================================================================
+
+Todos verificados en el codigo, no supuestos:
+
+  - projects_section.dart: la rejilla de escritorio tiene los indices [0,1] y
+    [2,3] CODIFICADOS. La lista tiene 5 proyectos. FOOD MATCH NUNCA SE HA
+    RENDERIZADO EN ESCRITORIO. Solo aparece en movil.
+  - hero_section.dart: el boton ./view_projects tiene onTap vacio, no hace nada.
+  - hero_section.dart: el boton ./download_cv abre GitHub, no el CV.
+  - portfolio_data.dart: enlazaba a un repositorio privado -> 404 para todo
+    visitante.
+  - test/widget_test.dart era la plantilla del contador de Flutter: llamaba
+    MyApp() cuando main.dart exporta PortfolioApp. NO COMPILABA desde el primer
+    commit. (YA ARREGLADO, Task 1.)
+  - assets/img/: 654 KB de imagenes, CERO referencias en lib/. Ni la foto de
+    Aldo se usaba. postgresql.png y react.png ni corresponden a su stack.
+  - web/index.html: og:description decia "Flutter Engineer · QA Automation".
+    Eso es lo que se ve al compartir el enlace en LinkedIn.
+  - about_section.dart:40 dice "Graduating Summer 2025". Esa fecha ya paso.
+  - 35.4 MB de build muerto commiteado en docs/ que no sirve nada: el commit
+    b942fef cambio la estructura pero nunca la configuracion de Pages, que
+    sigue apuntando a la rama gh-pages.
+
+
+================================================================
+3. ESTADO ACTUAL — DONDE QUEDAMOS
+================================================================
+
+Rama feat/backend-mobile-repositioning, suite en VERDE (4/4).
+
+Commits de la rama (mas reciente arriba):
+
+  2b5dc65  feat: add StackLayer and narrative fields to Project model
+  daeccc4  Fix widget test: assert actual name rendering
+  a55c59a  test: replace default counter template with real smoke test
+  826a1bb  docs: fix three pre-flight conflicts in the plan
+  999817d  docs: add implementation plan
+  33d9abf  docs: add design spec
+
+  [X] Task 1 — Suite de pruebas reparada.
+      test/helpers.dart con pumpPortfolio() y findTypewriterText().
+  [X] Task 2 — Modelo StackLayer + campos narrativos en Project.
+      Los proyectos existentes tienen placeholders temporales; Task 3 los tira.
+
+  [ ] Task 3 — SIGUIENTE. Los tres proyectos + rejilla dinamica.
+  [ ] Task 4 — Tarjeta expandible.
+  [ ] Task 5 — Retirar los campos legados (description, tags).
+  [ ] Task 6 — Contenido: puestos, hero y skills.
+  [ ] Task 7 — Arreglar los dos botones del hero.
+  [ ] Task 8 — Assets muertos, foto y fecha de graduacion.
+  [ ] Task 9 — Metadata de la pagina (og:image incluido).
+  [ ] Task 10 — Despliegue con GitHub Actions.
+
+Los tres proyectos aprobados, en este orden:
+  1. Institutional Email Automation Platform (Banxico) — Java/Spring
+  2. Food Match — Node/Express + Docker + Cloud Run + Flutter
+  3. Elektra Shopping Cart — Java
+
+
+================================================================
+4. COMO RETOMAR MANANA
+================================================================
+
+Metodo: skill superpowers:subagent-driven-development. Un subagente por tarea,
+revision entre cada una.
+
+  1. Leer el ledger: .superpowers/sdd/progress.md
+     Las tareas marcadas ahi como completas NO se vuelven a despachar.
+  2. Extraer el brief de la Task 3 del plan a .superpowers/sdd/briefs/
+     (el plan tiene el codigo completo de cada tarea).
+  3. Despachar el implementador con el brief, no con el plan entero.
+  4. VERIFICAR EL RESULTADO A MANO. No basta el reporte del subagente:
+     en la Task 1 reporto "DONE" habiendo dejado una prueba que se llamaba
+     "renderiza el nombre" y solo comprobaba que existiera un Scaffold.
+     Leer el codigo y correr flutter test uno mismo.
+
+Nota: la Task 3 alcanzo a escribir su prueba RED antes de que se cancelara la
+sesion. Se borro para dejar la suite en verde; el plan la recrea igual.
+
+
+================================================================
+5. TRAMPAS DEL ENTORNO (ya cobradas una vez)
+================================================================
+
+  - USAR POWERSHELL para flutter y git. El Bash de este entorno NO tiene git,
+    ni tail, ni ls. Los scripts de la skill (task-brief, review-package) no
+    corren por eso; los traspasos se hacen con PowerShell.
+  - find.text() NO encuentra el texto del hero. TypewriterText.build devuelve
+    un RichText (typewriter_text.dart:82) y find.text() solo matchea Text y
+    EditableText. Usar findTypewriterText() de test/helpers.dart.
+  - NO usar pumpAndSettle(). El cursor del hero es un Timer.periodic perpetuo
+    (hero_section.dart:197): nunca converge. pumpPortfolio() bombea en ciclos.
+  - Los commits NO llevan firma de IA ni Co-Authored-By.
+  - El CV no se commitea (ya esta en .gitignore). Ver bloqueos.
+
+
+================================================================
+6. BLOQUEOS — DEPENDEN DE ALDO, NO DEL CODIGO
+================================================================
+
+  1. EL CV TIENE EL APELLIDO MAL ESCRITO.
+     El PDF dice "Aldo Zetina Muñino" en el encabezado. Es "Muciño". El
+     portafolio lo tiene bien (hero_section.dart:75); el error esta en el CV.
+     Hay que corregirlo en el archivo fuente (.tex o Word), que no esta en este
+     repositorio.
+     Mientras tanto cvUrl queda vacio a proposito y el boton ./download_cv NO
+     se renderiza. Un boton ausente es mejor que uno que entrega un documento
+     con el apellido mal escrito.
+     Al corregirlo: poner el PDF en web/ y el nombre del archivo en
+     PortfolioData.cvUrl.
+
+  2. FOOD MATCH ES UN REPOSITORIO PRIVADO.
+     Requiere una limpieza de historial pendiente antes de poder publicarse
+     (los detalles NO van en este archivo: repositorio publico). Ver el respaldo
+     local en D:\Codigo Abierto\FoodMatch_context_RESPALDO.txt.
+     Esto importa mas de lo que parece: NINGUNO de los tres proyectos tiene
+     codigo publico (uno privado, dos propietarios). La seccion de proyectos
+     dice "confia en mi" tres veces. Food Match es el UNICO que puede volverse
+     verificable, y depende de esa limpieza.
+
+  3. NO HAY CAPTURAS DE FOOD MATCH.
+     La carpeta del proyecto no esta en esta maquina (se busco en D:\ y en
+     C:\Users\aldo-). Por eso el modelo Project NO tiene campo images: nada
+     que poner ahi todavia.
+
+
+================================================================
+7. PENDIENTES FUERA DE ESTE REPOSITORIO
+================================================================
+
+  - Corregir el apellido en el CV fuente.
+  - Anadir Node.js/Express y el backend en Cloud Run al CV: tiene un backend
+    en produccion y el documento no lo menciona.
+  - Actualizar la fecha de graduacion del CV ("Summer 2025" ya paso).
