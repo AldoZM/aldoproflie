@@ -17,3 +17,16 @@ Future<void> pumpPortfolio(
     await tester.pump(const Duration(milliseconds: 500));
   }
 }
+
+/// Busca texto renderizado por `TypewriterText`.
+///
+/// `find.text()` NO sirve para esos textos: solo encuentra `Text` y
+/// `EditableText`, y `TypewriterText.build` devuelve un `RichText`
+/// (`typewriter_text.dart:82`). `includePlaceholders: false` descarta el
+/// WidgetSpan del cursor.
+Finder findTypewriterText(String text) => find.byWidgetPredicate(
+      (w) =>
+          w is RichText &&
+          w.text.toPlainText(includePlaceholders: false).contains(text),
+      description: 'RichText que contiene "$text"',
+    );

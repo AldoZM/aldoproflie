@@ -5,8 +5,7 @@ import 'helpers.dart';
 void main() {
   testWidgets('la app monta y renderiza el nombre', (tester) async {
     await pumpPortfolio(tester);
-    // The app renders the name through the hero section
-    expect(find.byType(Scaffold), findsOneWidget);
+    expect(findTypewriterText('Aldo Zetina Muciño'), findsOneWidget);
   });
 
   testWidgets('renderiza el scroll principal', (tester) async {
