@@ -128,7 +128,11 @@ Aditivo: `description` y `tags` se conservan para que `ProjectCard` siga compila
 **Interfaces:**
 - Produces:
   - `class StackLayer { final String label; final List<String> techs; const StackLayer(this.label, this.techs); }`
-  - `Project` con: `icon`, `name`, `period`, `summary`, `role`, `highlights` (`List<String>`), `stack` (`List<StackLayer>`), `githubUrl` (`String?`), `note` (`String?`), `images` (`List<String>`, default `const []`), más los legados `description` y `tags`.
+  - `Project` con: `icon`, `name`, `period`, `summary`, `role`, `highlights` (`List<String>`), `stack` (`List<StackLayer>`), `githubUrl` (`String?`), `note` (`String?`), más los legados `description` y `tags`.
+
+**Sin campo `images`.** La spec lo contemplaba para capturas de Food Match, pero
+no existen (la carpeta del proyecto no está en esta máquina) y ninguna tarea lo
+lee. Un campo que nadie usa es YAGNI. Se añade cuando haya capturas que poner.
 
 - [ ] **Step 1: Escribir la prueba que falla**
 
@@ -161,7 +165,6 @@ void main() {
     );
     expect(p.githubUrl, isNull);
     expect(p.note, 'Private repository');
-    expect(p.images, isEmpty); // default
   });
 }
 ```
@@ -192,7 +195,6 @@ class Project {
   final List<StackLayer> stack;
   final String? githubUrl;           // null = sin enlace
   final String? note;                // "Private repository", etc.
-  final List<String> images;
 
   // Legados: los retira la Task 5, cuando ProjectCard deje de usarlos.
   final String description;
@@ -208,7 +210,6 @@ class Project {
     required this.stack,
     this.githubUrl,
     this.note,
-    this.images = const [],
     required this.description,
     required this.tags,
   });
@@ -483,6 +484,7 @@ Crear `test/project_card_test.dart`:
 
 ```dart
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:aldo_portfolio/data/portfolio_data.dart';
 import 'package:aldo_portfolio/theme/app_theme.dart';
@@ -505,11 +507,19 @@ const _sample = Project(
   tags: [],
 );
 
-Future<void> _pumpCard(WidgetTester tester, {required bool expanded}) async {
+Future<void> _pumpCard(
+  WidgetTester tester, {
+  required bool expanded,
+  VoidCallback? onTap,
+}) async {
   await tester.pumpWidget(MaterialApp(
     theme: AppTheme.theme,
     home: Scaffold(
-      body: ProjectCard(project: _sample, expanded: expanded, onTap: () {}),
+      body: ProjectCard(
+        project: _sample,
+        expanded: expanded,
+        onTap: onTap ?? () {},
+      ),
     ),
   ));
 }
@@ -542,6 +552,30 @@ void main() {
     expect(find.text('Private repository'), findsOneWidget);
     expect(find.textContaining('View on GitHub'), findsNothing);
   });
+
+  testWidgets('Enter activa la tarjeta', (tester) async {
+    var taps = 0;
+    await _pumpCard(tester, expanded: false, onTap: () => taps++);
+
+    FocusScope.of(tester.element(find.byType(ProjectCard))).nextFocus();
+    await tester.pump();
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.pump();
+
+    expect(taps, 1);
+  });
+
+  testWidgets('Espacio activa la tarjeta', (tester) async {
+    var taps = 0;
+    await _pumpCard(tester, expanded: false, onTap: () => taps++);
+
+    FocusScope.of(tester.element(find.byType(ProjectCard))).nextFocus();
+    await tester.pump();
+    await tester.sendKeyEvent(LogicalKeyboardKey.space);
+    await tester.pump();
+
+    expect(taps, 1);
+  });
 }
 ```
 
@@ -556,6 +590,7 @@ Reemplazo completo de `lib/widgets/shared/project_card.dart`:
 
 ```dart
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../theme/app_theme.dart';
 import '../../data/portfolio_data.dart';
@@ -579,6 +614,18 @@ class ProjectCard extends StatefulWidget {
 class _ProjectCardState extends State<ProjectCard> {
   bool _hovered = false;
 
+  /// Enter y Espacio activan la tarjeta igual que el clic. Sin esto la
+  /// sección es inalcanzable con teclado y con lector de pantalla.
+  KeyEventResult _onKey(FocusNode node, KeyEvent event) {
+    if (event is! KeyDownEvent) return KeyEventResult.ignored;
+    if (event.logicalKey == LogicalKeyboardKey.enter ||
+        event.logicalKey == LogicalKeyboardKey.space) {
+      widget.onTap();
+      return KeyEventResult.handled;
+    }
+    return KeyEventResult.ignored;
+  }
+
   @override
   Widget build(BuildContext context) {
     final p = widget.project;
@@ -589,6 +636,7 @@ class _ProjectCardState extends State<ProjectCard> {
       onEnter: (_) => setState(() => _hovered = true),
       onExit:  (_) => setState(() => _hovered = false),
       child: Focus(
+        onKeyEvent: _onKey,
         child: Builder(builder: (context) {
           final focused = Focus.of(context).hasFocus;
           return GestureDetector(
@@ -759,22 +807,49 @@ class _TechChip extends StatelessWidget {
 - [ ] **Step 4: Ejecutar las pruebas de la tarjeta**
 
 Run: `flutter test test/project_card_test.dart`
-Expected: PASS — 4 pruebas.
+Expected: PASS — 6 pruebas.
 
 - [ ] **Step 5: Escribir la prueba de coordinación**
 
 Añadir al final de `test/projects_section_test.dart` (dentro de `main()`):
 
 ```dart
+  // Los `role` de cada proyecto sirven de sonda: solo se renderizan al expandir.
+  const roleBanxico = 'Software Engineer Intern — Banco de México';
+  const roleFoodMatch = 'Solo developer — mobile app, backend, and deployment';
+
   testWidgets('escritorio: la primera tarjeta arranca abierta', (tester) async {
     await pumpPortfolio(tester, size: const Size(1400, 900));
-    // "Software Engineer Intern — Banco de México" es el role del proyecto 0.
-    expect(find.text('Software Engineer Intern — Banco de México'), findsOneWidget);
+    expect(find.text(roleBanxico), findsOneWidget);
   });
 
   testWidgets('móvil: ninguna tarjeta arranca abierta', (tester) async {
     await pumpPortfolio(tester, size: const Size(420, 900));
-    expect(find.text('Software Engineer Intern — Banco de México'), findsNothing);
+    expect(find.text(roleBanxico), findsNothing);
+  });
+
+  testWidgets('escritorio: abrir una cierra la anterior', (tester) async {
+    await pumpPortfolio(tester, size: const Size(1400, 900));
+    expect(find.text(roleBanxico), findsOneWidget); // arranca abierta
+
+    await tester.tap(find.text('Food Match'));
+    await tester.pumpAndSettle();
+
+    expect(find.text(roleFoodMatch), findsOneWidget);
+    expect(find.text(roleBanxico), findsNothing); // la anterior se cerró
+  });
+
+  testWidgets('móvil: dos tarjetas pueden quedar abiertas a la vez', (tester) async {
+    await pumpPortfolio(tester, size: const Size(420, 2400));
+
+    await tester.tap(find.text('Institutional Email Automation Platform'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Food Match'));
+    await tester.pumpAndSettle();
+
+    // En una columna, forzar el cierre estorba: ambas siguen abiertas.
+    expect(find.text(roleBanxico), findsOneWidget);
+    expect(find.text(roleFoodMatch), findsOneWidget);
   });
 ```
 
@@ -796,8 +871,8 @@ class ProjectsSection extends StatefulWidget {
 }
 
 class _ProjectsSectionState extends State<ProjectsSection> {
-  // null = ninguna abierta. En escritorio arranca en 0; en móvil, en null.
-  int? _expanded;
+  /// Índices expandidos. Escritorio: a lo más uno. Móvil: los que el usuario abra.
+  final Set<int> _expanded = {};
   bool _initialized = false;
 
   @override
@@ -805,18 +880,21 @@ class _ProjectsSectionState extends State<ProjectsSection> {
     super.didChangeDependencies();
     if (_initialized) return;
     _initialized = true;
-    if (!AppTheme.isMobile(context)) _expanded = 0;
+    // Escritorio abre la primera: mucha gente no hace clic, y ahí vive la
+    // evidencia de backend. En móvil empujaría el resto fuera de pantalla.
+    if (!AppTheme.isMobile(context)) _expanded.add(0);
   }
 
   void _toggle(int index) {
     setState(() {
-      if (AppTheme.isMobile(context)) {
-        // Móvil: expansión libre, varias abiertas no estorban en una columna.
-        _expanded = _expanded == index ? null : index;
-      } else {
-        // Escritorio: una a la vez, para que la rejilla no se vuelva un acordeón.
-        _expanded = _expanded == index ? null : index;
+      if (_expanded.contains(index)) {
+        _expanded.remove(index);
+        return;
       }
+      // Escritorio: una a la vez, para que la rejilla no se vuelva un acordeón.
+      // Móvil: es una columna; forzar el cierre solo estorba.
+      if (!AppTheme.isMobile(context)) _expanded.clear();
+      _expanded.add(index);
     });
   }
 
@@ -850,7 +928,7 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                 delay: Duration(milliseconds: e.key * 120),
                 child: ProjectCard(
                   project: e.value,
-                  expanded: _expanded == e.key,
+                  expanded: _expanded.contains(e.key),
                   onTap: () => _toggle(e.key),
                 ),
               ),
@@ -865,7 +943,7 @@ class _ProjectsSectionState extends State<ProjectsSection> {
                     indices: [
                       for (int j = i; j < i + 2 && j < projects.length; j++) j,
                     ],
-                    expandedIndex: _expanded,
+                    expanded: _expanded,
                     onTap: _toggle,
                   ),
                 ],
@@ -886,13 +964,13 @@ Reemplazar la clase `_Row` completa por:
 class _Row extends StatelessWidget {
   final List<Project> projects;
   final List<int> indices;
-  final int? expandedIndex;
+  final Set<int> expanded;
   final void Function(int) onTap;
 
   const _Row({
     required this.projects,
     required this.indices,
-    required this.expandedIndex,
+    required this.expanded,
     required this.onTap,
   });
 
@@ -912,7 +990,7 @@ class _Row extends StatelessWidget {
                     delay: Duration(milliseconds: slot * 120),
                     child: ProjectCard(
                       project: projects[indices[slot]],
-                      expanded: expandedIndex == indices[slot],
+                      expanded: expanded.contains(indices[slot]),
                       onTap: () => onTap(indices[slot]),
                     ),
                   ),
@@ -927,7 +1005,7 @@ class _Row extends StatelessWidget {
 - [ ] **Step 9: Ejecutar la suite completa**
 
 Run: `flutter test`
-Expected: PASS — 14 pruebas.
+Expected: PASS — 18 pruebas.
 
 - [ ] **Step 10: Commit**
 
@@ -983,7 +1061,7 @@ En `test/project_model_test.dart` y `test/project_card_test.dart`, borrar `descr
 - [ ] **Step 5: Ejecutar la suite**
 
 Run: `flutter test`
-Expected: PASS — 14 pruebas.
+Expected: PASS — 18 pruebas.
 
 - [ ] **Step 6: Commit**
 
@@ -1146,7 +1224,7 @@ En `lib/widgets/sections/hero_section.dart`:
 - [ ] **Step 6: Ejecutar la suite**
 
 Run: `flutter test`
-Expected: PASS — 21 pruebas.
+Expected: PASS — 25 pruebas.
 
 - [ ] **Step 7: Commit**
 
@@ -1280,7 +1358,7 @@ En `lib/data/portfolio_data.dart:46`, reemplazar:
 - [ ] **Step 7: Ejecutar la suite**
 
 Run: `flutter test`
-Expected: PASS — 24 pruebas.
+Expected: PASS — 28 pruebas.
 
 - [ ] **Step 8: Commit**
 
@@ -1386,7 +1464,7 @@ por:
 - [ ] **Step 6: Ejecutar la suite**
 
 Run: `flutter test`
-Expected: PASS — 26 pruebas.
+Expected: PASS — 30 pruebas.
 
 - [ ] **Step 7: Commit**
 
@@ -1659,11 +1737,13 @@ git push origin --delete gh-pages
 
 ## Verificación final
 
-- [ ] `flutter test` — **26 pruebas** en verde
+- [ ] `flutter test` — **30 pruebas** en verde
 - [ ] `flutter analyze` — sin issues
 - [ ] Abrir el sitio en escritorio: **3 tarjetas visibles**, la de Banxico abierta
       (hoy solo se ven 4 de 5 y Food Match no aparece nunca)
-- [ ] Abrir el sitio en móvil (<600px): 3 tarjetas, ninguna abierta
+- [ ] Abrir el sitio en móvil (<600px): 3 tarjetas, ninguna abierta;
+      abrir dos a la vez funciona (en escritorio abrir una cierra la otra)
+- [ ] Tab lleva el foco a las tarjetas; Enter y Espacio las expanden
 - [ ] Clic en `./view_projects` → navega a #projects
 - [ ] `./download_cv` **no** aparece (cvUrl vacío)
 - [ ] Ninguna tarjeta muestra "View on GitHub"; las tres muestran su nota
