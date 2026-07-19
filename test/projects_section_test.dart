@@ -55,4 +55,64 @@ void main() {
     expect(tester.takeException(), isNull);
     expect(find.byType(ProjectCard), findsNWidgets(3));
   });
+
+  // Los `role` de cada proyecto sirven de sonda: solo se renderizan al expandir.
+  const roleBanxico = 'Software Engineer Intern — Banco de México';
+  const roleFoodMatch = 'Solo developer — mobile app, backend, and deployment';
+
+  // Tras un toque, deja correr AnimatedSize (240ms) por ciclos fijos.
+  // NO pumpAndSettle: el cursor del hero es un Timer.periodic perpetuo.
+  Future<void> settleCards(WidgetTester tester) async {
+    for (int i = 0; i < 6; i++) {
+      await tester.pump(const Duration(milliseconds: 120));
+    }
+  }
+
+  testWidgets('escritorio: la primera tarjeta arranca abierta', (tester) async {
+    VisibilityDetectorController.instance.updateInterval = Duration.zero;
+    await pumpPortfolio(tester, size: const Size(1400, 900));
+    await _scrollUntilProjectCardsAppear(tester);
+    expect(find.text(roleBanxico), findsOneWidget);
+  });
+
+  testWidgets('móvil: ninguna tarjeta arranca abierta', (tester) async {
+    VisibilityDetectorController.instance.updateInterval = Duration.zero;
+    await pumpPortfolio(tester, size: const Size(420, 900));
+    await _scrollUntilProjectCardsAppear(tester);
+    expect(find.text(roleBanxico), findsNothing);
+  });
+
+  testWidgets('escritorio: abrir una cierra la anterior', (tester) async {
+    VisibilityDetectorController.instance.updateInterval = Duration.zero;
+    await pumpPortfolio(tester, size: const Size(1400, 900));
+    await _scrollUntilProjectCardsAppear(tester);
+    expect(find.text(roleBanxico), findsOneWidget); // arranca abierta
+
+    await tester.ensureVisible(find.text('Food Match'));
+    await tester.pump();
+    await tester.tap(find.text('Food Match'));
+    await settleCards(tester);
+
+    expect(find.text(roleFoodMatch), findsOneWidget);
+    expect(find.text(roleBanxico), findsNothing); // la anterior se cerró
+  });
+
+  testWidgets('móvil: dos tarjetas pueden quedar abiertas a la vez', (tester) async {
+    VisibilityDetectorController.instance.updateInterval = Duration.zero;
+    await pumpPortfolio(tester, size: const Size(420, 2400));
+    await _scrollUntilProjectCardsAppear(tester);
+
+    await tester.ensureVisible(find.text('Institutional Email Automation Platform'));
+    await tester.pump();
+    await tester.tap(find.text('Institutional Email Automation Platform'));
+    await settleCards(tester);
+    await tester.ensureVisible(find.text('Food Match'));
+    await tester.pump();
+    await tester.tap(find.text('Food Match'));
+    await settleCards(tester);
+
+    // En una columna, forzar el cierre estorba: ambas siguen abiertas.
+    expect(find.text(roleBanxico), findsOneWidget);
+    expect(find.text(roleFoodMatch), findsOneWidget);
+  });
 }
