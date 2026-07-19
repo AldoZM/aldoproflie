@@ -8,7 +8,8 @@ import '../shared/typewriter_text.dart';
 import '../shared/terminal_card.dart';
 
 class HeroSection extends StatefulWidget {
-  const HeroSection({super.key});
+  final Map<String, GlobalKey> sectionKeys;
+  const HeroSection({super.key, required this.sectionKeys});
 
   @override
   State<HeroSection> createState() => _HeroSectionState();
@@ -52,6 +53,14 @@ class _HeroSectionState extends State<HeroSection> {
 
   Future<void> _delay(int ms) => Future.delayed(Duration(milliseconds: ms));
   void _set(VoidCallback fn) { if (mounted) setState(fn); }
+
+  // Mismo mecanismo que DesktopNavbar._scrollTo (desktop_navbar.dart:23).
+  void _scrollToProjects() {
+    final ctx = widget.sectionKeys['projects']?.currentContext;
+    if (ctx == null) return;
+    Scrollable.ensureVisible(ctx,
+        duration: const Duration(milliseconds: 600), curve: Curves.easeInOut);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -129,16 +138,20 @@ class _HeroSectionState extends State<HeroSection> {
           if (_showButtons)
             (isMobile
                 ? Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-                    _HeroBtn(label: './view_projects', primary: true, onTap: () {}),
-                    const SizedBox(height: 10),
-                    _HeroBtn(label: './download_cv', primary: false,
-                        onTap: () => launchUrl(Uri.parse(PortfolioData.githubUrl))),
+                    _HeroBtn(label: './view_projects', primary: true, onTap: _scrollToProjects),
+                    if (PortfolioData.cvUrl.isNotEmpty) ...[
+                      const SizedBox(height: 10),
+                      _HeroBtn(label: './download_cv', primary: false,
+                          onTap: () => launchUrl(Uri.parse(PortfolioData.cvUrl))),
+                    ],
                   ])
                 : Row(children: [
-                    _HeroBtn(label: './view_projects', primary: true, onTap: () {}),
-                    const SizedBox(width: 12),
-                    _HeroBtn(label: './download_cv', primary: false,
-                        onTap: () => launchUrl(Uri.parse(PortfolioData.githubUrl))),
+                    _HeroBtn(label: './view_projects', primary: true, onTap: _scrollToProjects),
+                    if (PortfolioData.cvUrl.isNotEmpty) ...[
+                      const SizedBox(width: 12),
+                      _HeroBtn(label: './download_cv', primary: false,
+                          onTap: () => launchUrl(Uri.parse(PortfolioData.cvUrl))),
+                    ],
                   ])
             ).animate().fadeIn(duration: 500.ms),
           const SizedBox(height: 40),

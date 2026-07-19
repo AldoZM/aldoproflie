@@ -60,6 +60,9 @@ class PortfolioData {
   static const String email     = 'zetinaa3@gmail.com';
   static const String phone     = '+52 744-272-6616';
   static const String location  = 'Mexico City, Mexico';
+  // Vacío a propósito: el CV fuente tiene el apellido mal escrito ("Muñino"
+  // en vez de "Muciño"). Mientras esté vacío, el botón ./download_cv no se
+  // renderiza. Al corregirlo: colocar el PDF en web/ y poner aquí su nombre.
   static const String cvUrl     = '';
 
   static const List<Job> jobs = [
