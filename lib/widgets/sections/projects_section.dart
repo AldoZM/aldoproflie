@@ -40,11 +40,20 @@ class ProjectsSection extends StatelessWidget {
               ),
             )).toList())
           else
-            Column(children: [
-              _Row(projects: projects, indices: [0, 1]),
-              const SizedBox(height: 16),
-              _Row(projects: projects, indices: [2, 3]),
-            ]),
+            // Filas de 2. Se calculan a partir de la lista: no codificar índices.
+            Column(
+              children: [
+                for (int i = 0; i < projects.length; i += 2) ...[
+                  if (i > 0) const SizedBox(height: 16),
+                  _Row(
+                    projects: projects,
+                    indices: [
+                      for (int j = i; j < i + 2 && j < projects.length; j++) j,
+                    ],
+                  ),
+                ],
+              ],
+            ),
         ],
       ),
     );
@@ -58,14 +67,24 @@ class _Row extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Row(
-    children: indices.map((i) => Expanded(
-      child: Padding(
-        padding: EdgeInsets.only(right: i == indices.first ? 8 : 0, left: i == indices.last ? 8 : 0),
-        child: ScrollReveal(
-          delay: Duration(milliseconds: (i % 2) * 120),
-          child: ProjectCard(project: projects[i]),
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      for (int slot = 0; slot < 2; slot++)
+        Expanded(
+          child: slot < indices.length
+              ? Padding(
+                  padding: EdgeInsets.only(
+                    right: slot == 0 ? 8 : 0,
+                    left: slot == 1 ? 8 : 0,
+                  ),
+                  child: ScrollReveal(
+                    delay: Duration(milliseconds: slot * 120),
+                    child: ProjectCard(project: projects[indices[slot]]),
+                  ),
+                )
+              // Hueco: mantiene el ancho de columna cuando la fila va incompleta.
+              : const SizedBox.shrink(),
         ),
-      ),
-    )).toList(),
+    ],
   );
 }

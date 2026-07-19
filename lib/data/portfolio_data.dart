@@ -105,60 +105,76 @@ class PortfolioData {
 
   static const List<Project> projects = [
     Project(
-      icon: '📱',
-      name: 'Mobile App with Flutter',
-      period: '—',
-      summary: '',
-      role: '',
-      highlights: const [],
-      stack: const [],
-      description: 'Cross-platform mobile application development with Flutter and Dart — REST API consumption, state management, and adaptive UI for iOS and Android. (2025–Present)',
-      tags: ['Flutter', 'Dart', 'REST APIs', 'iOS/Android'],
-    ),
-    Project(
-      icon: '🫀',
-      name: 'VR Medical Simulation — Código Infarto',
-      period: '—',
-      summary: '',
-      role: '',
-      highlights: const [],
-      stack: const [],
-      description: 'Interactive VR module simulating cardiac emergency protocols, built with Unity and C#. Interaction logic and flow validation developed alongside medical professionals. (2026–Present)',
-      tags: ['Unity', 'C#', 'VR', 'Interaction Logic'],
-    ),
-    Project(
-      icon: '🖥️',
-      name: 'Home Lab & Network Administration',
-      period: '—',
-      summary: '',
-      role: '',
-      highlights: const [],
-      stack: const [],
-      description: 'Linux server configured with service monitoring, security rules, and access control for continuous availability. (2026)',
-      tags: ['Linux', 'Networking', 'Monitoring', 'Security'],
-    ),
-    Project(
-      icon: '☕',
-      name: 'Advanced SQL & Java — PROTECO UNAM',
-      period: '—',
-      summary: '',
-      role: '',
-      highlights: const [],
-      stack: const [],
-      description: 'Complex query design, stored procedures, and database optimization (Honorable Mention), plus OOP and scalable application development in Java.',
-      tags: ['Java', 'SQL', 'Stored Procedures', 'OOP'],
+      icon: '🏦',
+      name: 'Institutional Email Automation Platform',
+      period: '2024–2026',
+      summary: 'An internal fullstack platform automating institutional email '
+               'workflows at Mexico\'s central bank.',
+      role: 'Software Engineer Intern — Banco de México',
+      highlights: [
+        'Built a Java/Spring backend exposing REST endpoints over a relational store.',
+        'Developed the JavaScript frontend and the supporting Python services.',
+        'Integrated the platform with the bank\'s user-directory infrastructure.',
+      ],
+      stack: [
+        StackLayer('Backend', ['Java', 'Spring Boot', 'JPA', 'REST']),
+        StackLayer('Frontend', ['JavaScript']),
+        StackLayer('Data', ['SQL']),
+        StackLayer('Services', ['Python']),
+      ],
+      githubUrl: null,
+      note: 'Internal software — not publicly available',
+      description: '',
+      tags: [],
     ),
     Project(
       icon: '🍔',
       name: 'Food Match',
-      period: '—',
-      summary: '',
-      role: '',
-      highlights: const [],
-      stack: const [],
-      description: 'Aplicación para descubrir y hacer match con tus comidas favoritas.',
-      tags: ['Flutter', 'Dart'],
-      githubUrl: 'https://github.com/AldoZM/Food_Match',
+      period: '2026',
+      summary: 'A decision-making app for two people sharing one phone: swipe '
+               'through food cards and a Bayesian scoring engine narrows down '
+               'what you both want to eat, then finds real restaurants nearby.',
+      role: 'Solo developer — mobile app, backend, and deployment',
+      highlights: [
+        'Designed a Bayesian scoring engine that updates weights across all '
+        'cuisine types on every swipe, converging on a shared preference in '
+        '6–10 questions.',
+        'Built a Node.js/Express backend that proxies the Google Places API, '
+        'keeping the API key server-side so it never ships in the mobile client.',
+        'Containerized the backend with Docker and deployed it to Google Cloud Run.',
+        'Extracted pure helpers to make request building and response mapping '
+        'unit-testable under node:test.',
+      ],
+      stack: [
+        StackLayer('Mobile', ['Flutter', 'Dart', 'Geolocator']),
+        StackLayer('Backend', ['Node.js', 'Express', 'REST']),
+        StackLayer('Infrastructure', ['Docker', 'Google Cloud Run']),
+      ],
+      githubUrl: null,
+      note: 'Private repository',
+      description: '',
+      tags: [],
+    ),
+    Project(
+      icon: '🛒',
+      name: 'Elektra Shopping Cart',
+      period: '2022–2024',
+      summary: 'Core shopping-cart functionality for Elektra\'s high-traffic '
+               'e-commerce mobile app, shipped during its initial build phase.',
+      role: 'Fullstack & Multiplatform QA Engineer — Grupo Salinas',
+      highlights: [
+        'Implemented core shopping cart features in Java, shipping product code '
+        'alongside the engineering team.',
+        'Applied object-oriented design against a high-traffic production codebase.',
+      ],
+      stack: [
+        StackLayer('Backend', ['Java']),
+        StackLayer('Mobile', ['Native & hybrid apps']),
+      ],
+      githubUrl: null,
+      note: 'Proprietary — not publicly available',
+      description: '',
+      tags: [],
     ),
   ];
 
