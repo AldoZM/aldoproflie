@@ -42,10 +42,6 @@ class Project {
   final String? githubUrl;           // null = sin enlace
   final String? note;                // "Private repository", etc.
 
-  // Legados: los retira la Task 5, cuando ProjectCard deje de usarlos.
-  final String description;
-  final List<String> tags;
-
   const Project({
     required this.icon,
     required this.name,
@@ -56,8 +52,6 @@ class Project {
     required this.stack,
     this.githubUrl,
     this.note,
-    required this.description,
-    required this.tags,
   });
 }
 
@@ -124,8 +118,6 @@ class PortfolioData {
       ],
       githubUrl: null,
       note: 'Internal software — not publicly available',
-      description: '',
-      tags: [],
     ),
     Project(
       icon: '🍔',
@@ -152,8 +144,6 @@ class PortfolioData {
       ],
       githubUrl: null,
       note: 'Private repository',
-      description: '',
-      tags: [],
     ),
     Project(
       icon: '🛒',
@@ -173,8 +163,6 @@ class PortfolioData {
       ],
       githubUrl: null,
       note: 'Proprietary — not publicly available',
-      description: '',
-      tags: [],
     ),
   ];
 

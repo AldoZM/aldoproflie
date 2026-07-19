@@ -19,8 +19,6 @@ void main() {
       stack: [StackLayer('Backend', ['Node.js'])],
       githubUrl: null,
       note: 'Private repository',
-      description: 'legacy',
-      tags: ['Flutter'],
     );
     expect(p.githubUrl, isNull);
     expect(p.note, 'Private repository');

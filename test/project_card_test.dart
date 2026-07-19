@@ -18,8 +18,6 @@ const _sample = Project(
   ],
   githubUrl: null,
   note: 'Private repository',
-  description: '',
-  tags: [],
 );
 
 Future<void> _pumpCard(
