@@ -64,21 +64,28 @@ class PortfolioData {
 
   static const List<Job> jobs = [
     Job(
-      role: 'Database Engineering Intern',
+      role: 'Software Engineer Intern',
       company: 'Banco de México',
       dates: 'Fall 2024 – Spring 2026',
       isCurrent: true,
       bullets: [
+        'Built an internal fullstack web platform automating institutional email '
+        'workflows: Java/Spring backend exposing REST endpoints over a relational '
+        'store, JavaScript frontend, and Python services, integrated with the '
+        'bank\'s user-directory infrastructure.',
         'Reduced pipeline failures by 30% by implementing data validation and sanitization in Python with retry logic over critical production data pipelines',
         'Automated identity management for 500+ users using PowerShell and Python, integrating Active Directory with relational access-control systems',
         'Implemented audit controls and event logging over financial data flows, improving traceability and observability across production systems',
       ],
     ),
     Job(
-      role: 'Database QA Engineer',
+      role: 'Fullstack & Multiplatform QA Engineer',
       company: 'Grupo Salinas · Elektra.mx',
       dates: 'Summer 2022 – Spring 2024',
       bullets: [
+        'Implemented core shopping cart features in Java during the early build '
+        'phase of Elektra\'s high-traffic e-commerce mobile app, shipping product '
+        'code alongside the engineering team.',
         'Reduced manual testing time by 40% by automating test suites for iOS and Android with Appium, accelerating mobile app release cycles',
         'Built a scalable testing framework for native and hybrid mobile apps using Java, Selenium, and Cucumber, integrated into CI/CD pipelines with AWS CodeCommit',
         "Validated critical user flows on Elektra's high-traffic mobile app, documenting root causes in Jira and preventing cross-release regressions",
@@ -167,39 +174,43 @@ class PortfolioData {
   ];
 
   static const List<SkillGroup> skillGroups = [
+    SkillGroup(label: 'BACKEND & APIs', skills: [
+      Skill('Java', SkillColor.blue),
+      Skill('Spring Boot', SkillColor.blue),
+      Skill('JPA/Hibernate', SkillColor.blue),
+      Skill('REST APIs', SkillColor.green),
+      Skill('Node.js', SkillColor.green),
+      Skill('Express', SkillColor.green),
+      Skill('JUnit', SkillColor.gray),
+      Skill('Maven/Gradle', SkillColor.gray),
+      Skill('Stored Procedures', SkillColor.gray),
+      Skill('Query Optimization', SkillColor.gray),
+    ]),
     SkillGroup(label: 'MOBILE', skills: [
       Skill('Flutter', SkillColor.blue),
       Skill('Dart', SkillColor.blue),
-      Skill('Appium', SkillColor.green),
-      Skill('Selenium', SkillColor.gray),
-      Skill('Cucumber', SkillColor.gray),
       Skill('iOS/Android', SkillColor.gray),
+      Skill('Appium', SkillColor.gray),
     ]),
     SkillGroup(label: 'LANGUAGES', skills: [
-      Skill('Java', SkillColor.green),
-      Skill('C++', SkillColor.green),
+      Skill('Java', SkillColor.blue),
+      Skill('C++', SkillColor.blue),
       Skill('Python', SkillColor.blue),
-      Skill('Dart', SkillColor.blue),
+      Skill('JavaScript', SkillColor.blue),
       Skill('SQL', SkillColor.gray),
+      Skill('Dart', SkillColor.gray),
       Skill('Bash', SkillColor.gray),
       Skill('PowerShell', SkillColor.gray),
-      Skill('JavaScript', SkillColor.gray),
     ]),
-    SkillGroup(label: 'TOOLS', skills: [
-      Skill('Git', SkillColor.green),
+    SkillGroup(label: 'INFRA & TOOLS', skills: [
       Skill('Docker', SkillColor.green),
+      Skill('Google Cloud Run', SkillColor.green),
       Skill('Linux', SkillColor.green),
-      Skill('AWS CodeCommit', SkillColor.gray),
-      Skill('Jira', SkillColor.gray),
-      Skill('Active Directory', SkillColor.gray),
-      Skill('Wireshark', SkillColor.gray),
-    ]),
-    SkillGroup(label: 'OTHER', skills: [
-      Skill('Unity', SkillColor.gray),
-      Skill('C#', SkillColor.gray),
-      Skill('RESTful APIs', SkillColor.gray),
+      Skill('Git', SkillColor.green),
       Skill('CI/CD', SkillColor.gray),
-      Skill('UML', SkillColor.gray),
+      Skill('Active Directory', SkillColor.gray),
+      Skill('Jira', SkillColor.gray),
+      Skill('Wireshark', SkillColor.gray),
     ]),
   ];
 }
