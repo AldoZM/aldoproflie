@@ -27,6 +27,18 @@ class AboutSection extends StatelessWidget {
           ),
           const SizedBox(height: 44),
           ScrollReveal(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.asset(
+                'assets/img/Aldo.jpg',
+                width: 160,
+                height: 160,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+          ScrollReveal(
             delay: const Duration(milliseconds: 100),
             child: _Card(title: '🎓 Education', child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,7 +49,7 @@ class AboutSection extends StatelessWidget {
                 Text('UNAM – Faculty of Engineering',
                     style: TextStyle(fontSize: 13, color: AppTheme.accentBlue)),
                 SizedBox(height: 4),
-                Text('GPA: 8.5/10.0 (equiv. 3.4/4.0) · Graduating Summer 2025',
+                Text('GPA: 8.5/10.0 (equiv. 3.4/4.0) · Graduated Summer 2025',
                     style: TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
                 SizedBox(height: 4),
                 Text('Coursework: Data Structures, Algorithms, Distributed Systems, OS, Software Engineering',
