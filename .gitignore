@@ -52,3 +52,7 @@ app.*.map.json
 # el apellido mal escrito ("Muñino" en vez de "Muciño"). Cuando este corregido
 # va en web/ para que Flutter lo copie al build, no en la raiz.
 Aldo_Zetina_CV*.pdf
+
+# El build lo publica GitHub Actions; nunca se commitea.
+/docs/*
+!/docs/superpowers/
