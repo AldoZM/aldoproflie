@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> {
               ),
               SliverList(
                 delegate: SliverChildListDelegate([
-                  HeroSection(key: _keys['home'], sectionKeys: _keys),
+                  HeroSection(key: _keys['home']),
                   ExperienceSection(key: _keys['experience']),
                   ProjectsSection(key: _keys['projects']),
                   SkillsSection(key: _keys['skills']),

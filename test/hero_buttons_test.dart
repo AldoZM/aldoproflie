@@ -3,18 +3,18 @@ import 'package:aldo_portfolio/data/portfolio_data.dart';
 import 'helpers.dart';
 
 void main() {
-  test('cvUrl vacío es la señal de "no hay CV publicable"', () {
-    // El CV fuente tiene el apellido mal escrito ("Muñino").
-    // Mientras cvUrl esté vacío, el botón no debe renderizarse.
-    expect(PortfolioData.cvUrl, isEmpty);
+  test('cvUrl apunta al PDF publicado', () {
+    // Aldo decidió publicar el CV tal cual (ver portfolio_data.dart).
+    expect(PortfolioData.cvUrl, isNotEmpty);
+    expect(PortfolioData.cvUrl, endsWith('.pdf'));
   });
 
-  testWidgets('con cvUrl vacío NO se renderiza el botón de CV', (tester) async {
+  testWidgets('con cvUrl definido SÍ se renderiza el botón de CV', (tester) async {
     await pumpPortfolio(tester);
-    expect(find.text('./download_cv'), findsNothing);
+    expect(find.text('./download_cv'), findsOneWidget);
   });
 
-  testWidgets('el botón view_projects sí se renderiza', (tester) async {
+  testWidgets('el botón view_projects se renderiza', (tester) async {
     await pumpPortfolio(tester);
     expect(find.text('./view_projects'), findsOneWidget);
   });

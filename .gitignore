@@ -48,10 +48,11 @@ app.*.map.json
 # Es estado de trabajo local, no historial del proyecto.
 .superpowers/
 
-# El CV NO se commitea aqui: este repositorio es publico y el PDF actual tiene
-# el apellido mal escrito ("Muñino" en vez de "Muciño"). Cuando este corregido
-# va en web/ para que Flutter lo copie al build, no en la raiz.
+# El CV de la raiz no se commitea. La copia en web/ SI: Aldo decidio publicarla
+# tal cual para que el boton de descarga funcione (el PDF dice "Muñino" en vez
+# de "Muciño"; corregir el apellido en el CV fuente queda pendiente).
 Aldo_Zetina_CV*.pdf
+!/web/Aldo_Zetina_CV_Java_EN.pdf
 
 # El build lo publica GitHub Actions; nunca se commitea.
 /docs/*

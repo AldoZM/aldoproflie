@@ -60,10 +60,10 @@ class PortfolioData {
   static const String email     = 'zetinaa3@gmail.com';
   static const String phone     = '+52 744-272-6616';
   static const String location  = 'Mexico City, Mexico';
-  // Vacío a propósito: el CV fuente tiene el apellido mal escrito ("Muñino"
-  // en vez de "Muciño"). Mientras esté vacío, el botón ./download_cv no se
-  // renderiza. Al corregirlo: colocar el PDF en web/ y poner aquí su nombre.
-  static const String cvUrl     = '';
+  // El PDF se sirve desde web/ (Flutter lo copia al build). Aldo decidió
+  // publicarlo tal cual, a sabiendas de que el encabezado dice "Muñino" en
+  // vez de "Muciño"; corregir el apellido en el CV fuente queda pendiente.
+  static const String cvUrl     = 'https://aldozm.github.io/aldoproflie/Aldo_Zetina_CV_Java_EN.pdf';
 
   static const List<Job> jobs = [
     Job(
